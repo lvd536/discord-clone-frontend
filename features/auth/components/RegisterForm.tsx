@@ -1,7 +1,5 @@
 'use client';
 
-import * as React from 'react';
-
 import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,8 +13,9 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input';
 
 import { useAuthStore } from '@/features/auth/store/auth.store';
-import { api } from '@/lib/api/api';
 
+import { register } from '../actions';
+import { useAuthCookie } from '../hooks/useAuthCookie';
 import OAuthProviders from './OAuthProviders';
 
 const registerFormSchema = z.object({
@@ -27,6 +26,8 @@ const registerFormSchema = z.object({
 
 export function RegisterForm() {
     const router = useRouter();
+
+    const { setAuthToken } = useAuthCookie();
 
     const form = useForm<z.infer<typeof registerFormSchema>>({
         resolver: zodResolver(registerFormSchema),
@@ -41,10 +42,9 @@ export function RegisterForm() {
 
     async function onSubmit(data: z.infer<typeof registerFormSchema>) {
         try {
-            const response = await api.post('/auth/register', data);
-            const { user, access_token } = response.data;
+            const { user, access_token } = await register(data);
 
-            localStorage.setItem('access_token', access_token);
+            setAuthToken(access_token);
 
             await initUser(user);
 
@@ -56,9 +56,7 @@ export function RegisterForm() {
             router.push('/profile');
         } catch (err) {
             toast('Ошибка регистрации:', {
-                description:
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (err as any).response?.data?.message || (err as Error).message,
+                description: (err as Error).message,
                 position: 'top-center',
             });
         }

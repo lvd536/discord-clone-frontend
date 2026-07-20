@@ -1,8 +1,8 @@
 'use client';
 
-export default function OAuthProviders() {
-    const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+import { baseURL } from '../constants';
 
+export default function OAuthProviders() {
     const handleOAuthRedirect = (provider: string) => {
         window.location.href = `${baseURL}/auth/${provider}`;
     };
@@ -38,7 +38,7 @@ export default function OAuthProviders() {
                 <span className="text-muted-foreground mx-4 shrink text-xs uppercase">
                     Или через почту
                 </span>
-                <div className="border-muted grow border-t"></div>
+                <div className="border-muted grow border-t" />
             </div>
         </div>
     );

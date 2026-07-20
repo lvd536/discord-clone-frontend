@@ -1,7 +1,5 @@
 'use client';
 
-import * as React from 'react';
-
 import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,9 +13,10 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input';
 
 import { useAuthStore } from '@/features/auth/store/auth.store';
-import { api } from '@/lib/api/api';
 
+import { login } from '../actions';
 import OAuthProviders from './OAuthProviders';
+import { useAuthCookie } from '../hooks/useAuthCookie';
 
 const loginFormSchema = z.object({
     email: z.email('Некорректный формат почты'),
@@ -26,6 +25,8 @@ const loginFormSchema = z.object({
 
 export function LoginForm() {
     const router = useRouter();
+
+    const { setAuthToken } = useAuthCookie();
 
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
@@ -39,10 +40,9 @@ export function LoginForm() {
 
     async function onSubmit(data: z.infer<typeof loginFormSchema>) {
         try {
-            const response = await api.post('/auth/login', data);
-            const { user, access_token } = response.data;
+            const { user, access_token } = await login(data);
 
-            localStorage.setItem('access_token', access_token);
+            setAuthToken(access_token)
 
             await initUser(user);
 
@@ -54,9 +54,7 @@ export function LoginForm() {
             router.push('/profile');
         } catch (err) {
             toast('Ошибка входа:', {
-                description:
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (err as any).response?.data?.message || (err as Error).message,
+                description: (err as Error).message,
                 position: 'top-center',
             });
         }

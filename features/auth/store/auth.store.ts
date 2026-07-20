@@ -1,34 +1,44 @@
 import { Account, User } from '@backend/types/__generated__/client';
 import { create } from 'zustand';
 
-import { api } from '@/lib/api/api';
+import { getAccounts, refetchUserData } from '../actions';
 
-interface IAuthStore {
+interface AuthState {
     profile: User | null;
     accounts: Account[];
+}
 
+interface AuthActions {
     initUser: (user: User) => Promise<void>;
     refetchUser: () => Promise<void>;
     clearUser: () => void;
 }
 
-export const useAuthStore = create<IAuthStore>((set) => ({
-    profile: null,
-    accounts: [],
+type AuthStore = AuthState & AuthActions;
+
+const initialState = { profile: null, accounts: [] };
+
+export const useAuthStore = create<AuthStore>((set) => ({
+    ...initialState,
+
     initUser: async (user) => {
-        const accountsResponse = await api.get('users/accounts');
-        const accounts = (await accountsResponse.data) as Account[];
+        const response = await getAccounts();
 
-        set({ profile: user, accounts });
+        if (response.success && response.data) {
+            set({ profile: user, accounts: response.data });
+        }
     },
+
     refetchUser: async () => {
-        const profileResponse = await api.get('users/profile');
-        const profile = (await profileResponse.data) as User;
+        const response = await refetchUserData();
 
-        const accountsResponse = await api.get('users/accounts');
-        const accounts = (await accountsResponse.data) as Account[];
-
-        set({ profile, accounts });
+        if (response.success && response.data) {
+            set({
+                profile: response.data.profile,
+                accounts: response.data.accounts,
+            });
+        }
     },
-    clearUser: () => set({ profile: null, accounts: [] }),
+
+    clearUser: () => set(initialState),
 }));

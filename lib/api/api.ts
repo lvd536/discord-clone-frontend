@@ -1,17 +1,45 @@
-import axios from "axios";
+import axios from 'axios';
+
+import { ROUTES } from '@/constants/route.constants';
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 export const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000",
+    baseURL: BASE_URL,
     headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
     },
     withCredentials: true,
 });
 
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("access_token");
-    if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`;
+api.interceptors.request.use(async (config) => {
+    if (typeof window === 'undefined') {
+        try {
+            const { cookies } = await import('next/headers');
+            const cookieStore = await cookies();
+
+            const accessToken = cookieStore.get('access_token')?.value;
+            if (accessToken) {
+                config.headers.Authorization = `Bearer ${accessToken}`;
+            }
+
+            const allCookies = cookieStore.getAll();
+            const cookieString = allCookies.map((c) => `${c.name}=${c.value}`).join('; ');
+            if (cookieString) {
+                config.headers.Cookie = cookieString;
+            }
+        } catch (err) {
+            console.error('Ошибка чтения кук на сервере:', err);
+        }
+    } else {
+        const accessToken = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('access_token='))
+            ?.split('=')[1];
+
+        if (accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
+        }
     }
     return config;
 });
@@ -21,26 +49,64 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (
+            error.response?.status === 401 &&
+            !originalRequest._retry &&
+            !originalRequest.url?.includes('/auth/login') &&
+            !originalRequest.url?.includes('/auth/refresh')
+        ) {
             originalRequest._retry = true;
 
-            try {
-                const response = await axios.post(
-                    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"}/auth/refresh`,
-                    {},
-                    { withCredentials: true },
-                );
+            if (typeof window === 'undefined') {
+                try {
+                    const { cookies } = await import('next/headers');
+                    const cookieStore = await cookies();
+                    const refreshToken = cookieStore.get('refresh_token')?.value;
 
-                const { access_token } = response.data;
+                    if (!refreshToken) {
+                        return Promise.reject(error);
+                    }
 
-                localStorage.setItem("access_token", access_token);
+                    const refreshResponse = await axios.post(
+                        `${BASE_URL}/auth/refresh`,
+                        {},
+                        {
+                            headers: {
+                                Cookie: `refresh_token=${refreshToken}`,
+                            },
+                        },
+                    );
 
-                originalRequest.headers.Authorization = `Bearer ${access_token}`;
-                return api(originalRequest);
-            } catch (refreshError) {
-                localStorage.removeItem("access_token");
-                window.location.href = "/login";
-                return Promise.reject(refreshError);
+                    const newAccessToken = refreshResponse.data.access_token;
+                    if (newAccessToken) {
+                        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                        return api(originalRequest);
+                    }
+                } catch (refreshError) {
+                    console.error('Критическая ошибка рефреша на сервере:', refreshError);
+                    return Promise.reject(error);
+                }
+            } else {
+                try {
+                    const refreshResponse = await axios.post(
+                        `${BASE_URL}/auth/refresh`,
+                        {},
+                        { withCredentials: true },
+                    );
+
+                    const newAccessToken = refreshResponse.data.access_token;
+
+                    if (newAccessToken) {
+                        document.cookie = `access_token=${newAccessToken}; path=/; max-age=900; SameSite=Lax`;
+                        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                        return api(originalRequest);
+                    }
+                } catch (refreshError) {
+                    console.error('Критическая ошибка обновления токена на клиенте:', refreshError);
+                    document.cookie =
+                        'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                    window.location.href = ROUTES.AUTH.LOGIN;
+                }
             }
         }
 
