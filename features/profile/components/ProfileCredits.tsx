@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
 import { useAuthStore } from '@/features/auth/store/auth.store';
+import { api } from '@/lib/api/api';
 
 export default function ProfileCredits() {
     const { profile } = useAuthStore();
