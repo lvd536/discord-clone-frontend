@@ -4,7 +4,6 @@ import {
     ArrowRight,
     Hash,
     MessageSquare,
-    Monitor,
     PhoneCall,
     Plus,
     ShieldCheck,
