@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { ServerDeleteAlert } from './ServerDeleteAlert';
+import ServerEditModal from './ServerEditModal';
 
 interface IProps {
     serverName: string;
@@ -22,6 +23,7 @@ interface IProps {
 
 export default function ServerActions({ serverName, serverId }: IProps) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
     return (
         <>
@@ -32,6 +34,14 @@ export default function ServerActions({ serverName, serverId }: IProps) {
                 <DropdownMenuContent className="w-40" align="start">
                     <DropdownMenuGroup>
                         <DropdownMenuLabel>Настройки сервера</DropdownMenuLabel>
+                        <DropdownMenuItem
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setIsEditModalOpen(true);
+                            }}
+                        >
+                            Изменить
+                        </DropdownMenuItem>
                         <DropdownMenuItem>Участники</DropdownMenuItem>
                         <DropdownMenuItem>Роли</DropdownMenuItem>
                         <DropdownMenuItem
@@ -46,6 +56,12 @@ export default function ServerActions({ serverName, serverId }: IProps) {
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>
+            <ServerEditModal
+                open={isEditModalOpen}
+                onOpenChange={() => setIsEditModalOpen(false)}
+                serverId={serverId}
+                serverName={serverName}
+            />
             <ServerDeleteAlert
                 open={isDeleteModalOpen}
                 onOpenChange={() => setIsDeleteModalOpen(false)}

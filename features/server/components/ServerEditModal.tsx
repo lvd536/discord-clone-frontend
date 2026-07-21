@@ -1,24 +1,21 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogFooter,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogFooter } from '@/components/ui/dialog';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
 import { editServer } from '../actions';
 
 interface IProps {
-    server: { id: string; name: string; imageUrl?: string };
+    serverName: string;
+    serverAvatar?: string;
+    serverId: string;
+    open: boolean;
+    onOpenChange: () => void;
 }
 
 const serverEditFormSchema = z.object({
@@ -26,21 +23,27 @@ const serverEditFormSchema = z.object({
         .string('Название должно быть строкой')
         .min(4, 'Минимальная длина названия сервера 4 символа')
         .max(12, 'Название сервера не должно превышать 12 символов'),
-    imageUrl: z.string(),
+    imageUrl: z.string().optional(),
 });
 
-export default function ServerEditModal({ server }: IProps) {
+export default function ServerEditModal({
+    serverName,
+    serverAvatar,
+    serverId,
+    open,
+    onOpenChange,
+}: IProps) {
     const form = useForm<z.infer<typeof serverEditFormSchema>>({
         resolver: zodResolver(serverEditFormSchema),
         defaultValues: {
-            name: server.name,
-            imageUrl: server.imageUrl,
+            name: serverName,
+            imageUrl: serverAvatar,
         },
     });
 
     async function onSubmit(data: z.infer<typeof serverEditFormSchema>) {
         try {
-            await editServer(data, server.id);
+            await editServer(data, serverId);
 
             toast(`Сервер  ${data.name} изменен!`, {
                 position: 'bottom-right',
@@ -50,14 +53,15 @@ export default function ServerEditModal({ server }: IProps) {
                 description: (err as Error).message,
                 position: 'top-center',
             });
+        } finally {
+            onOpenChange();
         }
     }
 
     return (
-        <Dialog>
-            <form id="server-creation-form" onSubmit={form.handleSubmit(onSubmit)}>
-                <DialogTrigger render={<Plus className="text-green-400" />} />
-                <DialogContent className="max-w-xl">
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="max-w-xl">
+                <form id="server-edit-form" onSubmit={form.handleSubmit(onSubmit)}>
                     <FieldGroup>
                         <Controller
                             name="name"
@@ -80,17 +84,17 @@ export default function ServerEditModal({ server }: IProps) {
                             )}
                         />
                     </FieldGroup>
-                    <DialogFooter>
+                    <DialogFooter className="mt-2">
                         <Button type="button" variant="outline" onClick={() => form.reset()}>
                             Сбросить
                         </Button>
                         <DialogClose render={<Button variant="outline">Закрыть</Button>} />
-                        <Button type="submit" form="server-creation-form">
-                            Создать
+                        <Button type="submit" form="server-edit-form">
+                            Изменить
                         </Button>
                     </DialogFooter>
-                </DialogContent>
-            </form>
+                </form>
+            </DialogContent>
         </Dialog>
     );
 }

@@ -11,9 +11,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 import { deleteServer } from '../actions';
 
@@ -44,6 +42,8 @@ export function ServerDeleteAlert({ open, serverName, serverId, onOpenChange }: 
                     'Произошла непредвиденная ошибка при удалении сервера. Пожалуйста, попробуйте снова или обратитесь в поддержку',
                 );
             }
+        } finally {
+            onOpenChange();
         }
     };
 

@@ -21,6 +21,8 @@ import { Input } from '@/components/ui/input';
 import { ROUTES } from '@/constants/route.constants';
 import { api } from '@/lib/api/api';
 
+import { joinServer } from '../actions';
+
 export default function ServerJoinModal() {
     const router = useRouter();
     const [open, setOpen] = useState(false);
@@ -33,7 +35,12 @@ export default function ServerJoinModal() {
 
         setLoading(true);
         try {
-            const response = await api.post(`/servers/join/${inviteCode.trim()}`);
+            const response = await joinServer(inviteCode);
+
+            if (!response.success) {
+                throw new Error(response.error);
+            }
+
             const member = response.data;
 
             toast.success('Вы успешно присоединились к серверу!');
@@ -45,7 +52,8 @@ export default function ServerJoinModal() {
             router.push(ROUTES.DASHBOARD.SERVER.ID(member.serverId));
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            const message = err.response?.data?.message || 'Не удалось присоединиться к серверу';
+            const message =
+                err.response?.data?.message || err.message || 'Не удалось присоединиться к серверу';
             toast.error(message);
         } finally {
             setLoading(false);

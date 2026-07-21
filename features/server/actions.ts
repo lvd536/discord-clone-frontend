@@ -10,14 +10,14 @@ import { createSafeAction } from '@/lib/create-safe-action';
 import { ServerInfoResponse } from '../shared/types/channel.types';
 
 export const joinServer = createSafeAction(async (inviteCode: string) => {
-    const response = await api.post(`/servers/join?inviteCode=${inviteCode}`);
-
+    const response = await api.post(`/servers/join/${inviteCode}`);
+    revalidatePath('/dashboard');
     return response.data;
 });
 
 export const editServer = createSafeAction(
-    async (server: { name: string; imageUrl: string }, serverId: string) => {
-        const response = await api.patch(`/servers?serverId=${serverId}`, server);
+    async (server: { name: string; imageUrl?: string }, serverId: string) => {
+        const response = await api.patch(`/servers/${serverId}`, server);
         revalidatePath('/dashboard');
         return response.data;
     },
