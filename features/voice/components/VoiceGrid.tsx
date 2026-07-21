@@ -2,9 +2,8 @@
 
 import { TrackReference, VideoTrack, useParticipants, useTracks } from '@livekit/components-react';
 import { Track } from 'livekit-client';
-import { MicOff } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import ParticipantTile from './ParticipantTile';
 
 export default function VoiceGrid() {
     const participants = useParticipants();
@@ -55,55 +54,9 @@ export default function VoiceGrid() {
 
     return (
         <div className="grid w-full grid-cols-2 justify-items-center gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {participants.map((p) => {
-                const isSpeaking = p.isSpeaking;
-                const isMuted = !p.isMicrophoneEnabled;
-
-                const initials = p.identity.substring(0, 2).toUpperCase();
-
-                let avatarUrl = '';
-                if (p.metadata) {
-                    const parsedMetadata = JSON.parse(p.metadata);
-                    avatarUrl = parsedMetadata.avatar;
-                }
-
-                return (
-                    <div
-                        key={p.sid}
-                        className="group relative flex aspect-square w-full max-w-45 flex-col items-center justify-center rounded-lg border border-[#1e1f22]/50 bg-[#2b2d31] p-4"
-                    >
-                        <div className="relative">
-                            <Avatar
-                                className={`h-20 w-20 transition-all duration-150 ${
-                                    isSpeaking
-                                        ? 'scale-105 shadow-[0_0_15px_rgba(35,165,90,0.6)] ring-4 ring-[#23a55a]'
-                                        : 'ring-0'
-                                }`}
-                            >
-                                <AvatarImage
-                                    src={avatarUrl}
-                                    alt={initials}
-                                    className="object-cover"
-                                />
-
-                                <AvatarFallback className="bg-[#5865f2] text-2xl font-bold text-white">
-                                    {initials}
-                                </AvatarFallback>
-                            </Avatar>
-
-                            {isMuted && (
-                                <div className="absolute right-0 bottom-0 z-10 rounded-full border-4 border-[#2b2d31] bg-[#f23f43] p-1.5">
-                                    <MicOff className="h-3.5 w-3.5 text-white" />
-                                </div>
-                            )}
-                        </div>
-
-                        <span className="mt-4 max-w-full truncate text-sm font-medium text-[#dbdee1]">
-                            {p.name || p.identity}
-                        </span>
-                    </div>
-                );
-            })}
+            {participants.map((p) => (
+                <ParticipantTile key={p.sid} participant={p} />
+            ))}
         </div>
     );
 }
