@@ -15,6 +15,7 @@ import {
 import { ROUTES } from '@/constants/route.constants';
 import { getProfile } from '@/features/auth/actions';
 import { getServerInfo, getUserServers } from '@/features/server/actions';
+import ServerActions from '@/features/server/components/ServerActions';
 import CreateChannelModal from '@/features/shared/components/CreateChannelModal';
 import MobileSidebar from '@/features/shared/components/MobileSidebar';
 import SidebarUser from '@/features/shared/components/SidebarUser';
@@ -45,22 +46,7 @@ export default async function ServerLayout({ params, children }: IProps) {
                 <div className="flex flex-col">
                     <div className="flex h-12 cursor-pointer items-center justify-between border-b border-[#1f2023] px-4 font-bold text-white shadow-sm hover:bg-[#35363c]/40">
                         <span>{serverInfo.name}</span>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                <EllipsisVertical size={16} className="focus:outline-0" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-40" align="start">
-                                <DropdownMenuGroup>
-                                    <DropdownMenuLabel>Настройки сервера</DropdownMenuLabel>
-                                    <DropdownMenuItem>Участники</DropdownMenuItem>
-                                    <DropdownMenuItem>Роли</DropdownMenuItem>
-                                    <DropdownMenuItem variant="destructive">
-                                        Удалить
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                                <DropdownMenuSeparator />
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <ServerActions serverName={serverInfo.name} serverId={serverInfo.id} />
                     </div>
 
                     <div className="mt-4 px-2">

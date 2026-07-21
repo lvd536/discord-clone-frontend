@@ -1,5 +1,7 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+
 import { Server } from '@backend/types/__generated__/client';
 
 import { api } from '@/lib/api/api';
@@ -16,20 +18,20 @@ export const joinServer = createSafeAction(async (inviteCode: string) => {
 export const editServer = createSafeAction(
     async (server: { name: string; imageUrl: string }, serverId: string) => {
         const response = await api.patch(`/servers?serverId=${serverId}`, server);
-
+        revalidatePath('/dashboard');
         return response.data;
     },
 );
 
 export const deleteServer = createSafeAction(async (serverId: string) => {
-    const response = await api.delete(`/servers?serverId=${serverId}`);
-
+    const response = await api.delete(`/servers/${serverId}`);
+    revalidatePath('/dashboard');
     return response.data;
 });
 
 export const createServer = createSafeAction(async (server: { name: string; imageUrl: string }) => {
     const response = await api.post(`/servers`, server);
-
+    revalidatePath('/dashboard');
     return response.data;
 });
 
