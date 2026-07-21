@@ -17,8 +17,10 @@ import { UserConversationsType } from '@/features/chat/types/chat.types';
 import ServerCreationModal from '@/features/server/components/ServerCreationModal';
 import ServerJoinModal from '@/features/server/components/ServerJoinModal';
 import SidebarServer from '@/features/server/components/SidebarServer';
+import VoiceStatusWidget from '@/features/voice/components/VoiceStatusWidget';
 
 import MobileSidebarChannelList from './MobileSidebarServerList';
+import SidebarUser from './SidebarUser';
 
 interface MobileSidebarProps {
     userServers: Server[];
@@ -102,7 +104,7 @@ export default function MobileSidebar({
                                         return (
                                             <li key={conv.id}>
                                                 <Link
-                                                    href={`/dashboard/@me/${conv.id}`}
+                                                    href={`/dashboard/me/${conv.id}`}
                                                     className="flex items-center gap-2 rounded px-2 py-1.5 text-sm font-medium text-[#949ba4] hover:bg-[#35363c]/60 hover:text-[#dbdee1]"
                                                 >
                                                     {conv.type === 'DIRECT' ? (
@@ -123,22 +125,9 @@ export default function MobileSidebar({
                             </div>
                         )}
 
-                        <div className="flex h-13 shrink-0 items-center justify-between bg-[#232428] px-2 py-1.5">
-                            <div className="flex max-w-40 cursor-pointer items-center gap-2 rounded p-1 hover:bg-[#35363c]/40">
-                                <Avatar className="h-8 w-8">
-                                    <AvatarImage src={user.avatarUrl ?? ''} />
-                                    <AvatarFallback>
-                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#5865f2] text-xs font-bold text-white">
-                                            {userInitials(user.displayName ?? user.email)}
-                                        </div>
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div className="flex flex-col overflow-hidden">
-                                    <span className="truncate text-xs font-bold text-[#f2f3f5]">
-                                        {user.displayName ?? user.email.slice(0, 5)}
-                                    </span>
-                                </div>
-                            </div>
+                        <div>
+                            <div id="voice-status-sidebar-target"></div>
+                            <SidebarUser user={user} />
                         </div>
                     </div>
                 </div>

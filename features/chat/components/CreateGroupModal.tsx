@@ -65,7 +65,7 @@ export default function CreateGroupModal() {
                 setGroupName('');
                 setSelectedFriendIds([]);
                 router.refresh();
-                router.push(`/dashboard/@me/${response.data.id}`);
+                router.push(`/dashboard/me/${response.data.id}`);
             }
         } catch (err) {
             if (err instanceof Error) toast.error(err.message || 'Не удалось создать группу');

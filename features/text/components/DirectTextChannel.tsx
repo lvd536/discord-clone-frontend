@@ -4,7 +4,11 @@ import { useState } from 'react';
 
 import { LiveKitRoom, RoomAudioRenderer } from '@livekit/components-react';
 
+import UserVoiceControls from '@/features/shared/components/UserVoiceControls';
+import UserVoiceControlsPortal from '@/features/shared/components/UserVoiceControlsPortal';
 import VoiceChannelInterface from '@/features/voice/components/VoiceChannelInterface';
+import VoiceStatusPortal from '@/features/voice/components/VoiceStatusPortal';
+import VoiceStatusWidget from '@/features/voice/components/VoiceStatusWidget';
 
 import DirectChatArea from './DirectChatArea';
 
@@ -30,6 +34,16 @@ export default function DirectTextChannel({ channelId, accessToken, channelName 
         >
             {inCall ? (
                 <div className="flex h-full flex-1 flex-col overflow-hidden">
+                    <UserVoiceControlsPortal>
+                        <UserVoiceControls />
+                    </UserVoiceControlsPortal>
+                    <VoiceStatusPortal>
+                        <VoiceStatusWidget
+                            channelName={channelName}
+                            onDisconnect={() => setInCall(false)}
+                        />
+                    </VoiceStatusPortal>
+
                     <div className="flex h-[45%] min-h-65 flex-col border-b border-[#1f2023] bg-[#2b2d31]">
                         <VoiceChannelInterface
                             channelId={channelName}

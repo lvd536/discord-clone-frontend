@@ -2,8 +2,13 @@
 
 import { LiveKitRoom, RoomAudioRenderer } from '@livekit/components-react';
 
+import UserVoiceControls from '@/features/shared/components/UserVoiceControls';
+import UserVoiceControlsPortal from '@/features/shared/components/UserVoiceControlsPortal';
+
 import VoiceChannelInterface from './VoiceChannelInterface';
 import VoiceChannelLifecycleManager from './VoiceChannelLifecycleManager';
+import VoiceStatusPortal from './VoiceStatusPortal';
+import VoiceStatusWidget from './VoiceStatusWidget';
 
 interface IProps {
     channelId: string;
@@ -25,6 +30,14 @@ export default function VoiceChannel({ channelId, accessToken, onLeave }: IProps
             connect={true}
             className="flex h-full flex-1 flex-col bg-[#313338] text-white"
         >
+            <UserVoiceControlsPortal>
+                <UserVoiceControls />
+            </UserVoiceControlsPortal>
+
+            <VoiceStatusPortal>
+                <VoiceStatusWidget channelName={channelId} onDisconnect={onLeave} />
+            </VoiceStatusPortal>
+
             <VoiceChannelLifecycleManager onLeave={onLeave} />
 
             <VoiceChannelInterface channelId={channelId} onLeave={onLeave} />

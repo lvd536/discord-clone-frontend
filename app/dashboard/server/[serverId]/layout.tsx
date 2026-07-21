@@ -1,8 +1,7 @@
 import Link from 'next/link';
 
-import { EllipsisVertical, Hash, Settings, Voicemail } from 'lucide-react';
+import { EllipsisVertical, Hash, Voicemail } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,6 +17,7 @@ import { getProfile } from '@/features/auth/actions';
 import { getServerInfo, getUserServers } from '@/features/server/actions';
 import CreateChannelModal from '@/features/shared/components/CreateChannelModal';
 import MobileSidebar from '@/features/shared/components/MobileSidebar';
+import SidebarUser from '@/features/shared/components/SidebarUser';
 
 interface IProps {
     params: Promise<{ serverId: string }>;
@@ -95,31 +95,9 @@ export default async function ServerLayout({ params, children }: IProps) {
                         </ul>
                     </div>
                 </div>
-
-                <div className="flex h-13 w-full items-center justify-between bg-[#232428] px-2 py-1.5">
-                    <div className="flex max-w-30 cursor-pointer items-center gap-2 rounded p-1">
-                        {user.avatarUrl && (
-                            <Avatar>
-                                <AvatarImage src={user.avatarUrl} />
-                                <AvatarFallback>
-                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#5865f2] text-xs font-bold text-white">
-                                        {(user.displayName ?? user.email).slice(0, 2)}
-                                    </div>
-                                </AvatarFallback>
-                            </Avatar>
-                        )}
-                        <div className="flex flex-col overflow-hidden">
-                            <span className="truncate text-xs font-bold text-[#f2f3f5]">
-                                {user.displayName ?? user.email.slice(0, 5)}
-                            </span>
-                        </div>
-                    </div>
-                    <Link
-                        href={ROUTES.PROFILE}
-                        className="group rounded p-1 transition-colors hover:bg-[#35373c]"
-                    >
-                        <Settings className="h-5 w-5 text-[#b5bac1] transition-colors group-hover:text-[#f2f3f5]" />
-                    </Link>
+                <div>
+                    <div id="voice-status-sidebar-target"></div>
+                    <SidebarUser user={user} />
                 </div>
             </div>
 

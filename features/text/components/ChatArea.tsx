@@ -80,8 +80,6 @@ export default function ChatArea({ channelName, channelId, serverId }: IProps) {
     const livekitMessages: INormalizedMessage[] = chatMessages.map((msg) => {
         let avatarUrl = '';
 
-        console.log(msg.from?.metadata);
-
         if (msg.from?.metadata) {
             try {
                 const parsedMetadata = JSON.parse(msg.from.metadata);

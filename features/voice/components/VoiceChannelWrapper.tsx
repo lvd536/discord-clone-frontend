@@ -1,4 +1,3 @@
-// features/voice/components/VoiceChannelWrapper.tsx
 'use client';
 
 import { useState } from 'react';
@@ -25,10 +24,11 @@ export default function VoiceChannelWrapper({
         setLoading(true);
         setError(null);
         try {
-            const joinResponse = await joinChannel(serverId, channelId);
-
+            const joinResponse = await joinChannel(channelId, serverId);
+            console.log(joinResponse);
             if (joinResponse.success) {
                 const data = joinResponse.data;
+                console.log(data);
                 setToken(data.token);
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
