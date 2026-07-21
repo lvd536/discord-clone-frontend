@@ -46,7 +46,7 @@ export default async function ServerLayout({ params, children }: IProps) {
                 <div className="flex flex-col">
                     <div className="flex h-12 cursor-pointer items-center justify-between border-b border-[#1f2023] px-4 font-bold text-white shadow-sm hover:bg-[#35363c]/40">
                         <span>{serverInfo.name}</span>
-                        <ServerActions serverName={serverInfo.name} serverId={serverInfo.id} />
+                        <ServerActions serverInfo={serverInfo} />
                     </div>
 
                     <div className="mt-4 px-2">

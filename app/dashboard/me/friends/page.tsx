@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 
 import { Input } from '@/components/ui/input';
 
+import { ROUTES } from '@/constants/route.constants';
 import { getOrCreateDM } from '@/features/chat/actions';
 import {
     acceptFriendRequest,
@@ -68,7 +69,7 @@ export default function FriendsPage() {
             const res = await getOrCreateDM(friendId);
             if (res.success && res.data) {
                 router.refresh();
-                router.push(`/dashboard/@me/${res.data.id}`);
+                router.push(ROUTES.DASHBOARD.ME.ID(res.data.id));
             }
         } catch {
             toast.error('Не удалось открыть диалог');

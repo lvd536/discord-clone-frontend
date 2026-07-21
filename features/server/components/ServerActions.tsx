@@ -13,15 +13,18 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import { ServerInfoResponse } from '@/features/shared/types/channel.types';
+
 import { ServerDeleteAlert } from './ServerDeleteAlert';
 import ServerEditModal from './ServerEditModal';
+import ServerInviteCodeDialog from './ServerInviteCodeDialog';
 
 interface IProps {
-    serverName: string;
-    serverId: string;
+    serverInfo: ServerInfoResponse;
 }
 
-export default function ServerActions({ serverName, serverId }: IProps) {
+export default function ServerActions({ serverInfo }: IProps) {
+    const [isInviteModalOpen, setIsInviteModalOpen] = useState<boolean>(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
@@ -42,6 +45,14 @@ export default function ServerActions({ serverName, serverId }: IProps) {
                         >
                             Изменить
                         </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setIsInviteModalOpen(true);
+                            }}
+                        >
+                            Пригласить
+                        </DropdownMenuItem>
                         <DropdownMenuItem>Участники</DropdownMenuItem>
                         <DropdownMenuItem>Роли</DropdownMenuItem>
                         <DropdownMenuItem
@@ -59,14 +70,20 @@ export default function ServerActions({ serverName, serverId }: IProps) {
             <ServerEditModal
                 open={isEditModalOpen}
                 onOpenChange={() => setIsEditModalOpen(false)}
-                serverId={serverId}
-                serverName={serverName}
+                serverId={serverInfo.id}
+                serverName={serverInfo.name}
+                serverAvatar={serverInfo.imageUrl ?? undefined}
             />
             <ServerDeleteAlert
                 open={isDeleteModalOpen}
                 onOpenChange={() => setIsDeleteModalOpen(false)}
-                serverName={serverName}
-                serverId={serverId}
+                serverName={serverInfo.name}
+                serverId={serverInfo.id}
+            />
+            <ServerInviteCodeDialog
+                open={isInviteModalOpen}
+                onOpenChange={(state) => setIsInviteModalOpen(state)}
+                inviteCode={serverInfo.inviteCode}
             />
         </>
     );

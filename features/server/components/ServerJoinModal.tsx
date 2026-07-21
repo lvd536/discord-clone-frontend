@@ -19,7 +19,6 @@ import {
 import { Input } from '@/components/ui/input';
 
 import { ROUTES } from '@/constants/route.constants';
-import { api } from '@/lib/api/api';
 
 import { joinServer } from '../actions';
 
@@ -95,15 +94,15 @@ export default function ServerJoinModal() {
                             id="invite-code"
                             value={inviteCode}
                             onChange={(e) => setInviteCode(e.target.value)}
-                            placeholder="h9sK2L"
-                            className="border-none bg-[#1e1f22] text-[#dbdee1] placeholder:text-[#4e5058] focus-visible:ring-0 focus-visible:ring-offset-0"
+                            placeholder="xxxx-xxxx-xxxx-xxxx"
+                            className="mt-1 border-none bg-[#1e1f22] text-[#dbdee1] placeholder:text-[#4e5058] focus-visible:ring-0 focus-visible:ring-offset-0"
                             autoComplete="off"
                             disabled={loading}
                         />
                         <span className="mt-1 block text-[11px] text-[#949ba4]">
                             Приглашения обычно выглядят как строка случайных символов:
                             <span className="mt-0.5 ml-1 block font-mono text-[#dbdee1]">
-                                h9sK2L
+                                xxxx-xxxx-xxxx-xxxx
                             </span>
                         </span>
                     </div>

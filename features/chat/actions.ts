@@ -1,5 +1,7 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+
 import { DirectMessage } from '@backend/types/__generated__/client';
 
 import { api } from '@/lib/api/api';
@@ -25,6 +27,7 @@ export const getOrCreateDM = createSafeAction(async (friendId: string) => {
 export const createGroupConversation = createSafeAction(
     async ({ name, friendIds }: { name: string; friendIds: string[] }) => {
         const response = await api.post('/conversations/group', { name, friendIds });
+        revalidatePath('/dashboard/me');
         return response.data as ChatResponseType;
     },
 );
