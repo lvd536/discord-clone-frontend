@@ -37,7 +37,7 @@ export default function ChatAreaMessage({ message, chatEndRef }: IProps) {
                     </span>
                     <span className="text-[10px] text-[#949ba4]">{timeString}</span>
                 </div>
-                <p className="wrap-break-words mt-0.5 text-sm whitespace-pre-wrap text-[#dbdee1]">
+                <p className="mt-0.5 text-sm wrap-break-word whitespace-pre-wrap text-[#dbdee1]">
                     {message.content}
                 </p>
             </div>
