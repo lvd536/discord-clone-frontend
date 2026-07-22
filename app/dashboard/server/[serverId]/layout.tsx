@@ -1,16 +1,6 @@
 import Link from 'next/link';
 
-import { EllipsisVertical, Hash, Voicemail } from 'lucide-react';
-
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Hash, Voicemail } from 'lucide-react';
 
 import { ROUTES } from '@/constants/route.constants';
 import { getProfile } from '@/features/auth/actions';
