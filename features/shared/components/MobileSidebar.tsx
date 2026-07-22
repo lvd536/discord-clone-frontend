@@ -1,14 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 import { Server, User } from '@backend/types/__generated__/client';
 import { Hash, Menu, Users } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 import { ROUTES } from '@/constants/route.constants';
@@ -17,7 +15,6 @@ import { UserConversationsType } from '@/features/chat/types/chat.types';
 import ServerCreationModal from '@/features/server/components/ServerCreationModal';
 import ServerJoinModal from '@/features/server/components/ServerJoinModal';
 import SidebarServer from '@/features/server/components/SidebarServer';
-import VoiceStatusWidget from '@/features/voice/components/VoiceStatusWidget';
 
 import MobileSidebarChannelList from './MobileSidebarServerList';
 import SidebarUser from './SidebarUser';
@@ -36,8 +33,6 @@ export default function MobileSidebar({
     conversations,
 }: MobileSidebarProps) {
     const [open, setOpen] = useState(false);
-
-    const userInitials = (name: string) => name.slice(0, 2).toUpperCase();
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>

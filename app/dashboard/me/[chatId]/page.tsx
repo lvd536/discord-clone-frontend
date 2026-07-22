@@ -57,6 +57,8 @@ export default async function PrivateMessagesPage({ params }: IProps) {
                 channelId={chatId}
                 accessToken={token}
                 channelName={chatName || 'Личная переписка'}
+                channelType={currentChat.type}
+                isOwner={user.id === currentChat.ownerId}
             />
         </div>
     );

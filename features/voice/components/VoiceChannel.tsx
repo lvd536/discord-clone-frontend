@@ -40,7 +40,7 @@ export default function VoiceChannel({ channelId, accessToken, onLeave }: IProps
 
             <VoiceChannelLifecycleManager onLeave={onLeave} />
 
-            <VoiceChannelInterface channelId={channelId} onLeave={onLeave} />
+            <VoiceChannelInterface channelId={channelId} />
 
             <RoomAudioRenderer />
         </LiveKitRoom>

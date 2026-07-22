@@ -72,3 +72,23 @@ export const deleteDirectMessage = createSafeAction(
         return response.data as DirectMessage;
     },
 );
+
+export const editGroup = createSafeAction(
+    async (conversationId: string, data: { name: string; participiantIds?: string[] }) => {
+        const response = await api.patch(`/conversations/${conversationId}/group`, data);
+        revalidatePath('/dashboard/me');
+        return response.data as DirectMessage;
+    },
+);
+
+export const deleteConversation = createSafeAction(async (conversationId: string) => {
+    const response = await api.delete(`/conversations/${conversationId}`);
+    revalidatePath('/dashboard/me');
+    return response.data as DirectMessage;
+});
+
+export const leaveFromGroup = createSafeAction(async (conversationId: string) => {
+    const response = await api.post(`/conversations/${conversationId}/group/leave`);
+    revalidatePath('/dashboard/me');
+    return response.data as DirectMessage;
+});

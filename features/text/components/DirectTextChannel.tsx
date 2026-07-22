@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { ConversationType } from '@backend/types/__generated__/enums';
 import { LiveKitRoom, RoomAudioRenderer } from '@livekit/components-react';
 
 import UserVoiceControls from '@/features/shared/components/UserVoiceControls';
@@ -16,9 +17,17 @@ interface IProps {
     channelId: string;
     accessToken: string;
     channelName: string;
+    channelType: ConversationType;
+    isOwner: boolean;
 }
 
-export default function DirectTextChannel({ channelId, accessToken, channelName }: IProps) {
+export default function DirectTextChannel({
+    channelId,
+    accessToken,
+    channelName,
+    channelType,
+    isOwner,
+}: IProps) {
     const [inCall, setInCall] = useState(false);
     const serverUrl = process.env.NEXT_PUBLIC_LIVEKIT_WS_URL || 'ws://localhost:7880';
 
@@ -46,9 +55,10 @@ export default function DirectTextChannel({ channelId, accessToken, channelName 
 
                     <div className="flex h-[45%] min-h-65 flex-col border-b border-[#1f2023] bg-[#2b2d31]">
                         <VoiceChannelInterface
+                            conversationId={channelId}
                             channelId={channelName}
-                            onLeave={() => setInCall(false)}
-                            autoStartMic={true}
+                            channelType={channelType}
+                            isOwner={isOwner}
                         />
                     </div>
 
@@ -57,6 +67,8 @@ export default function DirectTextChannel({ channelId, accessToken, channelName 
                             conversationId={channelId}
                             channelName={channelName}
                             inCallMode={true}
+                            channelType={channelType}
+                            isOwner={isOwner}
                         />
                     </div>
                 </div>
@@ -65,6 +77,8 @@ export default function DirectTextChannel({ channelId, accessToken, channelName 
                     conversationId={channelId}
                     channelName={channelName}
                     onStartCall={() => setInCall(true)}
+                    channelType={channelType}
+                    isOwner={isOwner}
                 />
             )}
 
