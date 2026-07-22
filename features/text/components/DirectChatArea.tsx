@@ -2,27 +2,20 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import Image from 'next/image';
-
 import { useChat, useParticipants } from '@livekit/components-react';
 import { Phone, Send } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { getDirectMessages, sendDirectMessage } from '@/features/chat/actions';
 
+import { INormalizedMessage } from '../types/message.types';
+import ChatAreaMessage from './ChatAreaMessage';
+
 interface IProps {
     conversationId: string;
     channelName: string;
     onStartCall?: () => void;
     inCallMode?: boolean;
-}
-
-interface INormalizedMessage {
-    id: string;
-    senderName: string;
-    avatarUrl: string | null;
-    content: string;
-    timestamp: number;
 }
 
 export default function DirectChatArea({
@@ -146,47 +139,13 @@ export default function DirectChatArea({
             )}
 
             <div className="discord-scroll flex flex-1 flex-col-reverse overflow-y-auto p-4">
-                {allMessages.map((msg, index) => {
-                    const timeString = new Date(msg.timestamp).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                    });
-                    const initials = msg.senderName.substring(0, 2).toUpperCase();
-
-                    return (
-                        <div
-                            key={msg.id}
-                            className="group flex items-start gap-4 rounded p-1.5 transition-all hover:bg-[#2e3035]/30"
-                        >
-                            {msg.avatarUrl ? (
-                                <Image
-                                    src={msg.avatarUrl}
-                                    alt={msg.senderName}
-                                    width={40}
-                                    height={40}
-                                    className="h-10 w-10 rounded-full object-cover"
-                                />
-                            ) : (
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#5865f2] text-xs font-bold text-white">
-                                    {initials}
-                                </div>
-                            )}
-
-                            <div className="flex flex-col overflow-hidden">
-                                <div className="flex items-center gap-2">
-                                    <span className="cursor-pointer text-sm font-semibold text-[#f2f3f5] hover:underline">
-                                        {msg.senderName}
-                                    </span>
-                                    <span className="text-[10px] text-[#949ba4]">{timeString}</span>
-                                </div>
-                                <p className="wrap-break-words mt-0.5 text-sm whitespace-pre-wrap text-[#dbdee1]">
-                                    {msg.content}
-                                </p>
-                            </div>
-                            {index === 1 && <div ref={chatEndRef} />}
-                        </div>
-                    );
-                })}
+                {allMessages.map((msg, index) => (
+                    <ChatAreaMessage
+                        message={msg}
+                        chatEndRef={index === 1 ? chatEndRef : undefined}
+                        key={msg.id}
+                    />
+                ))}
             </div>
 
             <form onSubmit={handleSendMessage} className="shrink-0 bg-[#313338] p-4">

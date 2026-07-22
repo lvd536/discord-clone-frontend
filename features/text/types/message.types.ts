@@ -31,3 +31,11 @@ export type MessageHistoryResponse = ({
     updatedAt: Date;
     memberId: string;
 })[];
+
+export interface INormalizedMessage {
+    id: string;
+    senderName: string;
+    avatarUrl: string | null;
+    content: string;
+    timestamp: number;
+}
