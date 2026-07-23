@@ -40,7 +40,7 @@ export default async function PrivateMessagesPage({ params }: IProps) {
 
     let token = '';
     try {
-        const tokenResponse = await joinChannel(chatId);
+        const tokenResponse = await joinChannel({ channelId: chatId });
         if (tokenResponse.success) token = tokenResponse.data.token;
     } catch (error) {
         console.error('Ошибка получения LiveKit-токена для личного чата:', error);

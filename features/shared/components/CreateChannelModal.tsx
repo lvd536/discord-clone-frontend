@@ -53,7 +53,7 @@ export default function CreateChannelModal({ serverId }: IProps) {
 
     async function onSubmit(data: z.infer<typeof channelCreationFormSchema>) {
         try {
-            const response = await createChannel(serverId, data.name, data.type);
+            const response = await createChannel({ serverId, name: data.name, type: data.type });
 
             if (!response.success) throw new Error(response.error);
 

@@ -57,9 +57,10 @@ export default function EditGroupModal({ open, conversationId, onOpenChange }: I
 
         setLoading(true);
         try {
-            const response = await editGroup(conversationId, {
+            const response = await editGroup({
+                conversationId,
                 name: groupName.trim(),
-                participiantIds: selectedFriendIds,
+                participantIds: selectedFriendIds,
             });
 
             if (response.success && response.data) {

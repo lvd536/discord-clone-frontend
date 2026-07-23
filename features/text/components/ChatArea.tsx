@@ -32,7 +32,7 @@ export default function ChatArea({ channelName, channelId, serverId }: IProps) {
         const fetchServerData = async () => {
             try {
                 const [historyResponse, membersResponse] = await Promise.all([
-                    await getMessageHistory(serverId, channelId),
+                    await getMessageHistory({ serverId, channelId }),
                     await getServerMembers(serverId),
                 ]);
                 const dbMessages = historyResponse.success ? historyResponse.data : [];
@@ -71,7 +71,7 @@ export default function ChatArea({ channelName, channelId, serverId }: IProps) {
 
         try {
             await send(content);
-            await createMessage(serverId, channelId, content);
+            await createMessage({ serverId, channelId, content });
         } catch (err) {
             if (err instanceof Error) {
                 toast.error(`Ошибка при отправке сообщения: ${err.message}`);

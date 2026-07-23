@@ -16,8 +16,8 @@ export const joinServer = createSafeAction(async (inviteCode: string) => {
 });
 
 export const editServer = createSafeAction(
-    async (server: { name: string; imageUrl?: string }, serverId: string) => {
-        const response = await api.patch(`/servers/${serverId}`, server);
+    async ({ serverId, name, imageUrl }: { serverId: string; name: string; imageUrl?: string }) => {
+        const response = await api.patch(`/servers/${serverId}`, { name, imageUrl });
         revalidatePath('/dashboard');
         return response.data;
     },

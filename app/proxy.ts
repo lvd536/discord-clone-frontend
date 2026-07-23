@@ -70,7 +70,7 @@ export default async function proxy(request: NextRequest) {
 
             return response;
         } catch (error) {
-            const loginResponse = NextResponse.redirect(new URL('/login', request.url));
+            const loginResponse = NextResponse.redirect(new URL('/auth/login', request.url));
             loginResponse.cookies.delete('access_token');
             loginResponse.cookies.delete('refresh_token');
             return loginResponse;

@@ -74,8 +74,19 @@ export const deleteDirectMessage = createSafeAction(
 );
 
 export const editGroup = createSafeAction(
-    async (conversationId: string, data: { name: string; participiantIds?: string[] }) => {
-        const response = await api.patch(`/conversations/${conversationId}/group`, data);
+    async ({
+        conversationId,
+        name,
+        participantIds,
+    }: {
+        conversationId: string;
+        name: string;
+        participantIds?: string[];
+    }) => {
+        const response = await api.patch(`/conversations/${conversationId}/group`, {
+            name,
+            participantIds,
+        });
         revalidatePath('/dashboard/me');
         return response.data as DirectMessage;
     },

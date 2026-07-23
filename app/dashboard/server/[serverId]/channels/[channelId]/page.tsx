@@ -11,7 +11,7 @@ interface ChannelPageProps {
 
 export default async function ChannelPage({ params }: ChannelPageProps) {
     const { serverId, channelId } = await params;
-    const channelResponse = await getChannelInfo(serverId, channelId);
+    const channelResponse = await getChannelInfo({ serverId, channelId });
     const channel = channelResponse.success ? channelResponse.data : null;
 
     if (!channel || !channelResponse.success) {

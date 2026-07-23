@@ -43,7 +43,7 @@ export default function ServerEditModal({
 
     async function onSubmit(data: z.infer<typeof serverEditFormSchema>) {
         try {
-            await editServer(data, serverId);
+            await editServer({ serverId, ...data });
 
             toast(`Сервер  ${data.name} изменен!`, {
                 position: 'bottom-right',

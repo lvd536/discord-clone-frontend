@@ -26,7 +26,7 @@ export default function TextChannel({ channelName, serverId, channelId }: IProps
             setLoading(true);
             setError(null);
             try {
-                const joinResponse = await joinChannel(channelId, serverId);
+                const joinResponse = await joinChannel({ channelId, serverId });
 
                 if (joinResponse.success) {
                     const data = joinResponse.data;
