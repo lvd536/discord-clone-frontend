@@ -5,7 +5,7 @@ import { Server } from '@backend/types/__generated__/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import { ROUTES } from '@/constants/route.constants';
-import { ServerInfoResponse } from '@/features/auth/types/auth.types';
+import { ServerInfoResponse } from '@/features/shared/types/channel.types';
 
 interface IProps {
     server: Server;

@@ -1,5 +1,4 @@
-import { MemberRole } from '@backend/types/__generated__/client';
-import { ChannelType } from '@backend/types/__generated__/enums';
+import { ChannelType, RolePermissions } from '@backend/types/__generated__/enums';
 
 export type ChannelResponse = {
     id: string;
@@ -11,26 +10,48 @@ export type ChannelResponse = {
 };
 
 export type ServerInfoResponse = {
-    members: ServerMembersType;
+    members: ({
+        user: {
+            id: string;
+            email: string;
+            displayName: string;
+            avatarUrl: string;
+        };
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        userId: string;
+        serverId: string;
+    })[];
     channels: {
         id: string;
         name: string;
-        type: ChannelType;
         createdAt: Date;
         updatedAt: Date;
         serverId: string;
+        type: ChannelType;
     }[];
 } & {
     id: string;
+    inviteCode: string;
     name: string;
+    imageUrl: string | null;
+    ownerId: string;
     createdAt: Date;
     updatedAt: Date;
-    imageUrl: string | null;
-    inviteCode: string;
-    ownerId: string;
 };
 
 export type ServerMembersType = ({
+    roles: {
+        id: string;
+        name: string;
+        createdAt: Date;
+        updatedAt: Date;
+        serverId: string;
+        color: string;
+        permissions: RolePermissions[];
+    }[];
     user: {
         id: string;
         email: string;
@@ -41,7 +62,6 @@ export type ServerMembersType = ({
     id: string;
     createdAt: Date;
     updatedAt: Date;
-    serverId: string;
-    role: MemberRole;
     userId: string;
+    serverId: string;
 })[];
