@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import Link from 'next/link';
+
 import { EllipsisVertical } from 'lucide-react';
 
 import {
@@ -13,6 +15,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import { ROUTES } from '@/constants/route.constants';
 import { ServerInfoResponse } from '@/features/shared/types/channel.types';
 
 import { ServerDeleteAlert } from './ServerDeleteAlert';
@@ -53,8 +56,11 @@ export default function ServerActions({ serverInfo }: IProps) {
                         >
                             Пригласить
                         </DropdownMenuItem>
-                        <DropdownMenuItem>Участники</DropdownMenuItem>
-                        <DropdownMenuItem>Роли</DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link href={ROUTES.DASHBOARD.SERVER.SETTINGS.SERVER(serverInfo.id)}>
+                                Настройки
+                            </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                             variant="destructive"
                             onClick={(e) => {

@@ -1,8 +1,8 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
 import { ServerMembersType } from '@/features/shared/types/channel.types';
+
+import { UserPopover } from './UserPopover';
 
 interface IProps {
     members: ServerMembersType;
@@ -57,33 +57,11 @@ export default function MemberList({ members }: IProps) {
                             const nameStyle = { color: group.roleColor };
 
                             return (
-                                <div
+                                <UserPopover
+                                    member={member}
+                                    nameStyle={nameStyle}
                                     key={member.id}
-                                    className="group flex cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 transition-colors duration-150 hover:bg-[#35363c]/60 active:bg-[#3b3d44]"
-                                >
-                                    <div className="relative h-8 w-8 shrink-0">
-                                        <Avatar className="h-8 w-8">
-                                            <AvatarImage
-                                                src={member.user.avatarUrl ?? ''}
-                                                className="object-cover"
-                                            />
-                                            <AvatarFallback className="bg-[#5865f2] text-xs font-bold text-white uppercase">
-                                                {member.user.displayName.substring(0, 2)}
-                                            </AvatarFallback>
-                                        </Avatar>
-
-                                        <div className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-[#2b2d31] bg-[#23a55a]" />
-                                    </div>
-
-                                    <div className="flex min-w-0 flex-1 flex-col">
-                                        <span
-                                            style={nameStyle}
-                                            className="truncate text-[14px] font-medium transition-colors group-hover:text-white"
-                                        >
-                                            {member.user.displayName}
-                                        </span>
-                                    </div>
-                                </div>
+                                />
                             );
                         })}
                     </div>

@@ -13,6 +13,12 @@ export const ROUTES = {
             ID: (serverId: string) => `/dashboard/server/${serverId}`,
             CHANNEL: (serverId: string, channelId: string) =>
                 `/dashboard/server/${serverId}/channels/${channelId}`,
+            SETTINGS: {
+                SERVER: (serverId: string) => `/dashboard/server/${serverId}/settings?page=server`,
+                MEMBERS: (serverId: string) =>
+                    `/dashboard/server/${serverId}/settings?page=members`,
+                ROLES: (serverId: string) => `/dashboard/server/${serverId}/settings?page=roles`,
+            },
         },
         ME: {
             BASE: '/dashboard/me',

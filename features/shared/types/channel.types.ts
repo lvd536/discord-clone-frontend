@@ -10,39 +10,37 @@ export type ChannelResponse = {
 };
 
 export type ServerInfoResponse = {
-    members: ({
-        user: {
-            id: string;
-            email: string;
-            displayName: string;
-            avatarUrl: string;
-        };
-    } & {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        userId: string;
-        serverId: string;
-    })[];
+    members: ServerMembersType;
     channels: {
-        id: string;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        type: ChannelType;
+        serverId: string;
+    }[];
+    roles: {
+        name: string;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
         serverId: string;
-        type: ChannelType;
+        color: string;
+        permissions: RolePermissions[];
     }[];
 } & {
-    id: string;
-    inviteCode: string;
     name: string;
+    id: string;
     imageUrl: string | null;
+    inviteCode: string;
     ownerId: string;
     createdAt: Date;
     updatedAt: Date;
 };
 
-export type ServerMembersType = ({
+export type ServerMembersType = ServerMemberType[];
+
+export type ServerMemberType = {
     roles: {
         id: string;
         name: string;
@@ -64,4 +62,4 @@ export type ServerMembersType = ({
     updatedAt: Date;
     userId: string;
     serverId: string;
-})[];
+};

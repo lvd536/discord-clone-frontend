@@ -166,6 +166,15 @@
     background-color: #242528;
 }
 
+.custom-color-picker .react-colorful {
+    width: 160px !important;
+    height: 140px !important;
+}
+.custom-color-picker .react-colorful__pointer {
+    width: 16px;
+    height: 16px;
+}
+
 @layer base {
     * {
         @apply border-border outline-ring/50;
