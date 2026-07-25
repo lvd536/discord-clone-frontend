@@ -26,7 +26,6 @@ export default function DirectTextChannel({
 }: IProps) {
     const { activeChannelId, isConnected, connect } = useVoiceStore();
 
-    // Проверяем, запущен ли звонок в этом чате через глобальный стор [33]
     const isCurrentChatInCall = isConnected && activeChannelId === channelId;
 
     const handleStartCall = () => {
@@ -37,8 +36,6 @@ export default function DirectTextChannel({
         });
     };
 
-    // ВАЖНО: Если звонок АКТИВЕН, GlobalVoiceProvider УЖЕ обернул всю страницу в <LiveKitRoom>.
-    // Нам НЕ НУЖНО рендерить второй <LiveKitRoom> здесь, чтобы не было конфликта токенов! [44]
     if (isCurrentChatInCall) {
         return (
             <div className="flex h-full flex-1 flex-col overflow-hidden bg-[#313338] text-white">
@@ -64,7 +61,6 @@ export default function DirectTextChannel({
         );
     }
 
-    // Если звонок НЕ активен — рендерим обычный текстовый чат с его единственной комнатой
     return (
         <LiveKitRoom
             key={channelId}
