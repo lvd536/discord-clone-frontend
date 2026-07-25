@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { Hash, Voicemail } from 'lucide-react';
+import { Delete, Hash, Trash, Voicemail } from 'lucide-react';
 
 import { ROUTES } from '@/constants/route.constants';
 import { getProfile } from '@/features/auth/actions';
@@ -55,15 +55,24 @@ export default async function ServerLayout({ params, children }: IProps) {
                                                 serverInfo.id,
                                                 cn.id,
                                             )}
-                                            className="flex flex-col gap-0.5"
+                                            className="group flex flex-col gap-0.5 rounded px-2 py-1.5 transition-colors hover:bg-[#35363c]/60"
                                         >
-                                            <div className="flex cursor-pointer items-center gap-1.5 rounded px-2 py-1.5 text-sm font-medium text-[#949ba4] hover:bg-[#35363c]/60 hover:text-[#dbdee1]">
-                                                {cn.type === 'TEXT' ? (
-                                                    <Hash className="h-5 w-5 text-[#80848e]" />
-                                                ) : (
-                                                    <Voicemail className="h-5 w-5 text-[#80848e]" />
-                                                )}
-                                                <span>{cn.name}</span>
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex cursor-pointer items-center gap-1.5 text-sm font-medium text-[#949ba4]">
+                                                    {cn.type === 'TEXT' ? (
+                                                        <Hash className="h-5 w-5 text-[#80848e] transition-colors group-hover:text-[#dbdee1]" />
+                                                    ) : (
+                                                        <Voicemail className="h-5 w-5 text-[#80848e] transition-colors group-hover:text-[#dbdee1]" />
+                                                    )}
+                                                    <span className="transition-colors group-hover:text-[#dbdee1]">
+                                                        {cn.name}
+                                                    </span>
+                                                </div>
+
+                                                <Trash
+                                                    size={14}
+                                                    className="text-[#80848e] transition-colors group-hover:text-[#dbdee1] hover:text-red-500/70"
+                                                />
                                             </div>
                                         </Link>
                                     </li>

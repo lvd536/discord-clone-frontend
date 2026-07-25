@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { joinChannel } from '@/features/shared/actions';
+import { useVoiceStore } from '@/features/shared/store/voice.store';
 import VoiceChannel from '@/features/voice/components/VoiceChannel';
 
 interface VoiceChannelWrapperProps {
@@ -16,20 +17,22 @@ export default function VoiceChannelWrapper({
     channelId,
     channelName,
 }: VoiceChannelWrapperProps) {
-    const [token, setToken] = useState<string | null>(null);
+    const { activeChannelId, isConnected, connect } = useVoiceStore();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const isCurrentChannelConnected = isConnected && activeChannelId === channelId;
 
     const handleJoinVoice = async () => {
         setLoading(true);
         setError(null);
         try {
-            const joinResponse = await joinChannel(channelId, serverId);
-            console.log(joinResponse);
+            const joinResponse = await joinChannel({ channelId, serverId });
+
             if (joinResponse.success) {
                 const data = joinResponse.data;
-                console.log(data);
-                setToken(data.token);
+
+                connect({ channelId, channelName, token: data.token, serverId });
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
@@ -39,13 +42,9 @@ export default function VoiceChannelWrapper({
         }
     };
 
-    const handleLeaveVoice = () => {
-        setToken(null);
-    };
-
     return (
         <div className="flex flex-1 flex-col bg-[#313338]">
-            {!token ? (
+            {!isCurrentChannelConnected ? (
                 <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
                     <div className="max-w-md rounded-lg border border-[#1f2023]/60 bg-[#2b2d31] p-8 shadow-lg">
                         <h1 className="mb-2 text-2xl font-bold text-white">
@@ -68,11 +67,7 @@ export default function VoiceChannelWrapper({
                 </div>
             ) : (
                 <div className="flex-1">
-                    <VoiceChannel
-                        channelId={channelId}
-                        accessToken={token}
-                        onLeave={handleLeaveVoice}
-                    />
+                    <VoiceChannel channelId={channelName} />
                 </div>
             )}
         </div>

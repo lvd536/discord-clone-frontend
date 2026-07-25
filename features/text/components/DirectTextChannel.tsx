@@ -1,15 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-
 import { ConversationType } from '@backend/types/__generated__/enums';
 import { LiveKitRoom, RoomAudioRenderer } from '@livekit/components-react';
 
-import UserVoiceControls from '@/features/shared/components/UserVoiceControls';
-import UserVoiceControlsPortal from '@/features/shared/components/UserVoiceControlsPortal';
+import { serverUrl } from '@/features/shared/constants/livekit.constants';
+import { useVoiceStore } from '@/features/shared/store/voice.store';
 import VoiceChannelInterface from '@/features/voice/components/VoiceChannelInterface';
-import VoiceStatusPortal from '@/features/voice/components/VoiceStatusPortal';
-import VoiceStatusWidget from '@/features/voice/components/VoiceStatusWidget';
 
 import DirectChatArea from './DirectChatArea';
 
@@ -28,11 +24,50 @@ export default function DirectTextChannel({
     channelType,
     isOwner,
 }: IProps) {
-    const [inCall, setInCall] = useState(false);
-    const serverUrl = process.env.NEXT_PUBLIC_LIVEKIT_WS_URL || 'ws://localhost:7880';
+    const { activeChannelId, isConnected, connect } = useVoiceStore();
 
+    // Проверяем, запущен ли звонок в этом чате через глобальный стор [33]
+    const isCurrentChatInCall = isConnected && activeChannelId === channelId;
+
+    const handleStartCall = () => {
+        connect({
+            channelId,
+            channelName,
+            token: accessToken,
+        });
+    };
+
+    // ВАЖНО: Если звонок АКТИВЕН, GlobalVoiceProvider УЖЕ обернул всю страницу в <LiveKitRoom>.
+    // Нам НЕ НУЖНО рендерить второй <LiveKitRoom> здесь, чтобы не было конфликта токенов! [44]
+    if (isCurrentChatInCall) {
+        return (
+            <div className="flex h-full flex-1 flex-col overflow-hidden bg-[#313338] text-white">
+                <div className="flex h-[45%] min-h-65 flex-col border-b border-[#1f2023] bg-[#2b2d31]">
+                    <VoiceChannelInterface
+                        conversationId={channelId}
+                        channelId={channelName}
+                        channelType={channelType}
+                        isOwner={isOwner}
+                    />
+                </div>
+
+                <div className="min-h-0 flex-1">
+                    <DirectChatArea
+                        conversationId={channelId}
+                        channelName={channelName}
+                        inCallMode={true}
+                        channelType={channelType}
+                        isOwner={isOwner}
+                    />
+                </div>
+            </div>
+        );
+    }
+
+    // Если звонок НЕ активен — рендерим обычный текстовый чат с его единственной комнатой
     return (
         <LiveKitRoom
+            key={channelId}
             video={false}
             audio={false}
             screen={false}
@@ -41,46 +76,13 @@ export default function DirectTextChannel({
             connect={true}
             className="flex h-full flex-1 flex-col overflow-hidden bg-[#313338] text-white"
         >
-            {inCall ? (
-                <div className="flex h-full flex-1 flex-col overflow-hidden">
-                    <UserVoiceControlsPortal>
-                        <UserVoiceControls />
-                    </UserVoiceControlsPortal>
-                    <VoiceStatusPortal>
-                        <VoiceStatusWidget
-                            channelName={channelName}
-                            onDisconnect={() => setInCall(false)}
-                        />
-                    </VoiceStatusPortal>
-
-                    <div className="flex h-[45%] min-h-65 flex-col border-b border-[#1f2023] bg-[#2b2d31]">
-                        <VoiceChannelInterface
-                            conversationId={channelId}
-                            channelId={channelName}
-                            channelType={channelType}
-                            isOwner={isOwner}
-                        />
-                    </div>
-
-                    <div className="min-h-0 flex-1">
-                        <DirectChatArea
-                            conversationId={channelId}
-                            channelName={channelName}
-                            inCallMode={true}
-                            channelType={channelType}
-                            isOwner={isOwner}
-                        />
-                    </div>
-                </div>
-            ) : (
-                <DirectChatArea
-                    conversationId={channelId}
-                    channelName={channelName}
-                    onStartCall={() => setInCall(true)}
-                    channelType={channelType}
-                    isOwner={isOwner}
-                />
-            )}
+            <DirectChatArea
+                conversationId={channelId}
+                channelName={channelName}
+                onStartCall={handleStartCall}
+                channelType={channelType}
+                isOwner={isOwner}
+            />
 
             <RoomAudioRenderer />
         </LiveKitRoom>

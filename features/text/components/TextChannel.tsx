@@ -5,6 +5,7 @@ import { useLayoutEffect, useState } from 'react';
 import { LiveKitRoom } from '@livekit/components-react';
 
 import { joinChannel } from '@/features/shared/actions';
+import { serverUrl } from '@/features/shared/constants/livekit.constants';
 
 import ChatArea from './ChatArea';
 
@@ -18,8 +19,6 @@ export default function TextChannel({ channelName, serverId, channelId }: IProps
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-
-    const serverUrl = process.env.NEXT_PUBLIC_LIVEKIT_WS_URL || 'ws://localhost:7880';
 
     useLayoutEffect(() => {
         const getToken = async () => {
