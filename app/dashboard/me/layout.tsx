@@ -5,13 +5,12 @@ import { User, UserPlus2Icon } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-import { ROUTES } from '@/features/shared/constants/route.constants';
 import { getProfile } from '@/features/auth/actions';
 import { getUserConversations } from '@/features/direct-chat/actions';
-import CreateGroupModal from '@/features/direct-chat/components/CreateGroupModal';
+import { CreateGroupModal } from '@/features/direct-chat/components';
 import { getUserServers } from '@/features/server/actions';
-import MobileSidebar from '@/features/shared/components/MobileSidebar';
-import SidebarUser from '@/features/shared/components/SidebarUser';
+import { MobileSidebar, SidebarUser } from '@/features/shared/components';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 
 interface IProps {
     children: React.ReactNode;

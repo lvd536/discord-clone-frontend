@@ -8,7 +8,7 @@ import { Phone, Send } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { getDirectMessages, sendDirectMessage } from '@/features/direct-chat/actions';
-import GroupActions from '@/features/direct-chat/components/GroupActions';
+import { GroupActions } from '@/features/direct-chat/components';
 
 import { INormalizedMessage } from '../types/message.types';
 import ChatAreaMessage from './ChatAreaMessage';

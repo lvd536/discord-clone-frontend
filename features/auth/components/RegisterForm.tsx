@@ -16,7 +16,7 @@ import { useAuthStore } from '@/features/auth/store/auth.store';
 
 import { register } from '../actions';
 import { useAuthCookie } from '../hooks/useAuthCookie';
-import OAuthProviders from './OAuthProviders';
+import OAuthProviders from './';
 
 const registerFormSchema = z.object({
     displayName: z.string().min(4, 'Имя должно быть не менее 4 символов'),

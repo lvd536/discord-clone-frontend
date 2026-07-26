@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { joinChannel } from '@/features/shared/actions';
 import { useVoiceStore } from '@/features/shared/store/voice.store';
-import VoiceChannel from '@/features/voice/components/VoiceChannel';
+import { VoiceChannel } from '@/features/voice/components';
 
 interface VoiceChannelWrapperProps {
     serverId: string;

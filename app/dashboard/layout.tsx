@@ -3,13 +3,11 @@ import { redirect } from 'next/navigation';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-import { ROUTES } from '@/features/shared/constants/route.constants';
 import { getProfile } from '@/features/auth/actions';
 import { getUserServers } from '@/features/server/actions';
-import ServerCreationModal from '@/features/server/components/ServerCreationModal';
-import ServerJoinModal from '@/features/server/components/ServerJoinModal';
-import GlobalVoiceProvider from '@/features/shared/components/GlobalVoiceProvider';
-import RootMobileHeader from '@/features/shared/components/RootMobileHeader';
+import { ServerCreationModal, ServerJoinModal } from '@/features/server/components';
+import { GlobalVoiceProvider, RootMobileHeader } from '@/features/shared/components';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [userServersResponse, userResponse] = await Promise.all([getUserServers(), getProfile()]);

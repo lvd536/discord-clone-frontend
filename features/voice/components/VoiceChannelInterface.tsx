@@ -3,7 +3,7 @@
 import { ConversationType } from '@backend/types/__generated__/enums';
 import { Volume2 } from 'lucide-react';
 
-import GroupActions from '@/features/direct-chat/components/GroupActions';
+import { GroupActions } from '@/features/direct-chat/components';
 
 import VoiceGrid from './VoiceGrid';
 

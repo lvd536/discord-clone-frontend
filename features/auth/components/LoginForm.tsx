@@ -15,8 +15,8 @@ import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/features/auth/store/auth.store';
 
 import { login } from '../actions';
-import OAuthProviders from './OAuthProviders';
 import { useAuthCookie } from '../hooks/useAuthCookie';
+import OAuthProviders from './';
 
 const loginFormSchema = z.object({
     email: z.email('Некорректный формат почты'),
@@ -42,7 +42,7 @@ export function LoginForm() {
         try {
             const { user, access_token } = await login(data);
 
-            setAuthToken(access_token)
+            setAuthToken(access_token);
 
             await initUser(user);
 

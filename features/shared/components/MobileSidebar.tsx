@@ -10,9 +10,7 @@ import { Hash, Menu, Users } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 import { UserConversationsType } from '@/features/direct-chat/types/direct-chat.types';
-import ServerCreationModal from '@/features/server/components/ServerCreationModal';
-import ServerJoinModal from '@/features/server/components/ServerJoinModal';
-import SidebarServer from '@/features/server/components/SidebarServer';
+import { ServerCreationModal, ServerJoinModal, SidebarServer } from '@/features/server/components';
 import { ROUTES } from '@/features/shared/constants/route.constants';
 import { ServerInfoResponse } from '@/features/shared/types/channel.types';
 

@@ -7,9 +7,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 
 import { useAuthStore } from '@/features/auth/store/auth.store';
-import ProfileCredits from '@/features/profile/components/ProfileCredits';
-import ProfileHeader from '@/features/profile/components/ProfileHeader';
-import ProfileIntegrations from '@/features/profile/components/ProfileIntegrations';
+import { ProfileCredits, ProfileHeader, ProfileIntegrations } from '@/features/profile/components';
 
 export default function ProfilePage() {
     const { profile, refetchUser } = useAuthStore();

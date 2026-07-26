@@ -2,13 +2,11 @@ import Link from 'next/link';
 
 import { Delete, Hash, Trash, Voicemail } from 'lucide-react';
 
-import { ROUTES } from '@/features/shared/constants/route.constants';
 import { getProfile } from '@/features/auth/actions';
 import { getServerInfo, getUserServers } from '@/features/server/actions';
-import ServerActions from '@/features/server/components/ServerActions';
-import CreateChannelModal from '@/features/shared/components/CreateChannelModal';
-import MobileSidebar from '@/features/shared/components/MobileSidebar';
-import SidebarUser from '@/features/shared/components/SidebarUser';
+import { ServerActions } from '@/features/server/components';
+import { CreateChannelModal, MobileSidebar, SidebarUser } from '@/features/shared/components';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 
 interface IProps {
     params: Promise<{ serverId: string }>;

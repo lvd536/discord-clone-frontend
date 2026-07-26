@@ -2,12 +2,13 @@
 
 import { LiveKitRoom, RoomAudioRenderer } from '@livekit/components-react';
 
-import UserVoiceControls from '@/features/shared/components/UserVoiceControls';
-import UserVoiceControlsPortal from '@/features/shared/components/UserVoiceControlsPortal';
+import { UserVoiceControls, UserVoiceControlsPortal } from '@/features/shared/components';
 import { useVoiceStore } from '@/features/shared/store/voice.store';
-import VoiceChannelLifecycleManager from '@/features/voice/components/VoiceChannelLifecycleManager';
-import VoiceStatusPortal from '@/features/voice/components/VoiceStatusPortal';
-import VoiceStatusWidget from '@/features/voice/components/VoiceStatusWidget';
+import {
+    VoiceChannelLifecycleManager,
+    VoiceStatusPortal,
+    VoiceStatusWidget,
+} from '@/features/voice/components';
 
 export default function GlobalVoiceProvider({ children }: { children: React.ReactNode }) {
     const { activeChannelId, activeChannelName, token, isConnected, disconnect } = useVoiceStore();

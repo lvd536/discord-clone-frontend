@@ -7,7 +7,7 @@ import { Hash, Send, Users } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { getServerMembers } from '@/features/server/actions';
-import MembersSheet from '@/features/server/components/MembersSheet';
+import { MembersSheet } from '@/features/server/components';
 import { ServerMembersType } from '@/features/shared/types/channel.types';
 
 import { createMessage, getMessageHistory } from '../actions';
