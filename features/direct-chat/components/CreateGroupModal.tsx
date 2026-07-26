@@ -19,8 +19,9 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 
-import { createGroupConversation } from '@/features/chat/actions';
 import { getFriends } from '@/features/friends/actions';
+
+import { createGroupConversation } from '../actions';
 
 export default function CreateGroupModal() {
     const router = useRouter();

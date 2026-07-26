@@ -17,8 +17,9 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 
-import { editGroup } from '@/features/chat/actions';
 import { getFriends } from '@/features/friends/actions';
+
+import { editGroup } from '../actions';
 
 interface IProps {
     open: boolean;

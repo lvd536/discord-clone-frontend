@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation';
 
 import { Hash, Voicemail } from 'lucide-react';
 
-import { ROUTES } from '@/constants/route.constants';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 import { ServerInfoResponse } from '@/features/shared/types/channel.types';
 
 interface IProps {

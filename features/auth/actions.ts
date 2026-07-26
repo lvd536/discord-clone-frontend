@@ -5,7 +5,7 @@ import { Account, User } from '@backend/types/__generated__/client';
 import { api } from '@/lib/api/api';
 import { createSafeAction } from '@/lib/create-safe-action';
 
-import { LoginFormDataType, RegisterFormDataType } from './types/login.types';
+import { LoginFormDataType, RegisterFormDataType } from './types/auth.types';
 
 export async function login(data: LoginFormDataType) {
     const response = await api.post('/auth/login', data);

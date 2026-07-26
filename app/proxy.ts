@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+import { BASE_URL } from '@/features/shared/constants/db.constants';
 
 export default async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;

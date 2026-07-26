@@ -5,7 +5,7 @@ import { Settings } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-import { ROUTES } from '@/constants/route.constants';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 
 interface IProps {
     user: User;

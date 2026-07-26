@@ -12,7 +12,7 @@ import {
     DirectMessageHistoryType,
     DirectMessageResponse,
     UserConversationsType,
-} from './types/chat.types';
+} from './types/direct-chat.types';
 
 export const getUserConversations = createSafeAction(async () => {
     const response = await api.get('/conversations');

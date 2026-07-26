@@ -5,10 +5,10 @@ import { User, UserPlus2Icon } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-import { ROUTES } from '@/constants/route.constants';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 import { getProfile } from '@/features/auth/actions';
-import { getUserConversations } from '@/features/chat/actions';
-import CreateGroupModal from '@/features/chat/components/CreateGroupModal';
+import { getUserConversations } from '@/features/direct-chat/actions';
+import CreateGroupModal from '@/features/direct-chat/components/CreateGroupModal';
 import { getUserServers } from '@/features/server/actions';
 import MobileSidebar from '@/features/shared/components/MobileSidebar';
 import SidebarUser from '@/features/shared/components/SidebarUser';

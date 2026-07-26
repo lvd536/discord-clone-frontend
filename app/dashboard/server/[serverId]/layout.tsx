@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { Delete, Hash, Trash, Voicemail } from 'lucide-react';
 
-import { ROUTES } from '@/constants/route.constants';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 import { getProfile } from '@/features/auth/actions';
 import { getServerInfo, getUserServers } from '@/features/server/actions';
 import ServerActions from '@/features/server/components/ServerActions';

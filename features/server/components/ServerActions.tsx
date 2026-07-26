@@ -15,7 +15,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { ROUTES } from '@/constants/route.constants';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 import { ServerInfoResponse } from '@/features/shared/types/channel.types';
 
 import { ServerDeleteAlert } from './ServerDeleteAlert';

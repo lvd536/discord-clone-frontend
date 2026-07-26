@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-import { ROUTES } from '@/constants/route.constants';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 import { getProfile } from '@/features/auth/actions';
 import { getUserServers } from '@/features/server/actions';
 import ServerCreationModal from '@/features/server/components/ServerCreationModal';

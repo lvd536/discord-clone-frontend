@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 import { X } from 'lucide-react';
 
-import { ROUTES } from '@/constants/route.constants';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 import ServerSettingsSheet from '@/features/server-settings/components/ServerSettingsSheet';
 import SettingsMembersTab from '@/features/server-settings/components/SettingsMembersTab';
 import SettingsRolesTab from '@/features/server-settings/components/SettingsRolesTab';

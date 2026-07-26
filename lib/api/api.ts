@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-import { ROUTES } from '@/constants/route.constants';
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+import { ROUTES } from '@/features/shared/constants/route.constants';
+import { BASE_URL } from '@/features/shared/constants/db.constants';
 
 export const api = axios.create({
     baseURL: BASE_URL,

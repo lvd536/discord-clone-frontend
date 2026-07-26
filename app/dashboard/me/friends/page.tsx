@@ -10,8 +10,8 @@ import { toast } from 'sonner';
 
 import { Input } from '@/components/ui/input';
 
-import { ROUTES } from '@/constants/route.constants';
-import { getOrCreateDM } from '@/features/chat/actions';
+import { ROUTES } from '@/features/shared/constants/route.constants';
+import { getOrCreateDM } from '@/features/direct-chat/actions';
 import {
     acceptFriendRequest,
     getFriends,

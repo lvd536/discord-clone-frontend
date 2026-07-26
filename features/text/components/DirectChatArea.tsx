@@ -7,8 +7,8 @@ import { useChat, useParticipants } from '@livekit/components-react';
 import { Phone, Send } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { getDirectMessages, sendDirectMessage } from '@/features/chat/actions';
-import GroupActions from '@/features/chat/components/GroupActions';
+import { getDirectMessages, sendDirectMessage } from '@/features/direct-chat/actions';
+import GroupActions from '@/features/direct-chat/components/GroupActions';
 
 import { INormalizedMessage } from '../types/message.types';
 import ChatAreaMessage from './ChatAreaMessage';

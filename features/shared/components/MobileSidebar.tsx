@@ -9,12 +9,12 @@ import { Hash, Menu, Users } from 'lucide-react';
 
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
-import { ROUTES } from '@/constants/route.constants';
-import { ServerInfoResponse } from '@/features/shared/types/channel.types';
-import { UserConversationsType } from '@/features/chat/types/chat.types';
+import { UserConversationsType } from '@/features/direct-chat/types/direct-chat.types';
 import ServerCreationModal from '@/features/server/components/ServerCreationModal';
 import ServerJoinModal from '@/features/server/components/ServerJoinModal';
 import SidebarServer from '@/features/server/components/SidebarServer';
+import { ROUTES } from '@/features/shared/constants/route.constants';
+import { ServerInfoResponse } from '@/features/shared/types/channel.types';
 
 import MobileSidebarChannelList from './MobileSidebarServerList';
 import SidebarUser from './SidebarUser';

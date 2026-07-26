@@ -1,10 +1,10 @@
 'use client';
 
-import { baseURL } from '../constants';
+import { BASE_URL } from '@/features/shared/constants/db.constants';
 
 export default function OAuthProviders() {
     const handleOAuthRedirect = (provider: string) => {
-        window.location.href = `${baseURL}/auth/${provider}`;
+        window.location.href = `${BASE_URL}/auth/${provider}`;
     };
 
     return (

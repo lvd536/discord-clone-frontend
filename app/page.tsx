@@ -12,7 +12,7 @@ import {
     Volume2,
 } from 'lucide-react';
 
-import { ROUTES } from '@/constants/route.constants';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 
 export default function Home() {
     return (

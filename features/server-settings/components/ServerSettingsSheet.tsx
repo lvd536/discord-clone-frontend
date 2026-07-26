@@ -6,7 +6,7 @@ import { Home, Menu } from 'lucide-react';
 
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
-import { ROUTES } from '@/constants/route.constants';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 
 import ServerSettingsLinks from './ServerSettingsLinks';
 
