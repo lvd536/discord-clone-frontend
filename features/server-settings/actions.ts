@@ -1,5 +1,7 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+
 import { api } from '@/lib/api/api';
 import { createSafeAction } from '@/lib/create-safe-action';
 
@@ -18,7 +20,7 @@ export const grantMemberRoles = createSafeAction(
         const response = await api.post(`/servers/${serverId}/members/${memberId}/roles`, {
             roleIds,
         });
-
+        revalidatePath(`dashboard/server/[serverId]/settings`);
         return response.data;
     },
 );
@@ -36,7 +38,7 @@ export const revokeMemberRole = createSafeAction(
         const response = await api.delete(
             `/servers/${serverId}/members/${memberId}/roles/${roleId}`,
         );
-
+        revalidatePath(`dashboard/server/[serverId]/settings`);
         return response.data;
     },
 );
@@ -44,7 +46,7 @@ export const revokeMemberRole = createSafeAction(
 export const kickMember = createSafeAction(
     async ({ memberId, serverId }: { memberId: string; serverId: string }) => {
         const response = await api.delete(`/servers/${serverId}/members/${memberId}`);
-
+        revalidatePath(`dashboard/server/[serverId]/settings`);
         return response.data;
     },
 );
@@ -58,7 +60,7 @@ export const getServerRoles = createSafeAction(async (serverId: string) => {
 export const createServerRole = createSafeAction(
     async ({ serverId, role }: { serverId: string; role: RoleType }) => {
         const response = await api.post(`/servers/${serverId}/roles`, role);
-
+        revalidatePath(`dashboard/server/[serverId]/settings`);
         return response.data;
     },
 );
@@ -66,7 +68,7 @@ export const createServerRole = createSafeAction(
 export const updateServerRole = createSafeAction(
     async ({ serverId, roleId, role }: { serverId: string; roleId: string; role: RoleType }) => {
         const response = await api.patch(`/servers/${serverId}/roles/${roleId}`, role);
-
+        revalidatePath(`dashboard/server/[serverId]/settings`);
         return response.data;
     },
 );
@@ -74,7 +76,7 @@ export const updateServerRole = createSafeAction(
 export const deleteServerRole = createSafeAction(
     async ({ serverId, roleId }: { serverId: string; roleId: string }) => {
         const response = await api.delete(`/servers/${serverId}/roles/${roleId}`);
-
+        revalidatePath(`dashboard/server/[serverId]/settings`);
         return response.data;
     },
 );
