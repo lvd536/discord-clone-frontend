@@ -24,7 +24,7 @@ export type ChatResponseType = {
     type: ConversationType;
 };
 
-export type UserConversationsType = ({
+export type UserConversationType = {
     messages: {
         createdAt: Date;
         content: string;
@@ -51,7 +51,9 @@ export type UserConversationsType = ({
     updatedAt: Date;
     ownerId: string;
     type: ConversationType;
-})[];
+};
+
+export type UserConversationsType = UserConversationType[];
 
 export type DirectMessageHistoryType = ({
     sender: {
