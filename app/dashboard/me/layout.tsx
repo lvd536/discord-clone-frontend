@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { User, UserPlus2Icon } from 'lucide-react';
+import { User, UserPlus2Icon, X } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import { getProfile } from '@/features/auth/actions';
 import { getUserConversations } from '@/features/direct-chat/actions';
 import { CreateGroupModal } from '@/features/direct-chat/components';
+import DirectChat from '@/features/direct-chat/components/DirectChat';
 import { getUserServers } from '@/features/server/actions';
 import { MobileSidebar, SidebarUser } from '@/features/shared/components';
 import { ROUTES } from '@/features/shared/constants/route.constants';
@@ -47,49 +48,13 @@ export default async function DirectLayout({ children }: IProps) {
                     <div className="mt-4 px-2">
                         {conversations && conversations.length > 0 ? (
                             <ul className="discord-scroll space-y-0.5">
-                                {conversations.map((conversation) => {
-                                    const otherParticipant = conversation.participants.find(
-                                        (p) => p.user.id !== user.id,
-                                    )?.user;
-
-                                    const chatName =
-                                        conversation.type === 'DIRECT'
-                                            ? (otherParticipant?.displayName ??
-                                              otherParticipant?.email)
-                                            : conversation.name;
-
-                                    return (
-                                        <li key={conversation.id}>
-                                            <Link
-                                                href={ROUTES.DASHBOARD.ME.ID(conversation.id)}
-                                                className="flex flex-col gap-0.5"
-                                            >
-                                                <div className="flex cursor-pointer items-center gap-1.5 rounded px-2 py-1.5 text-sm font-medium text-[#949ba4] hover:bg-[#35363c]/60 hover:text-[#dbdee1]">
-                                                    {conversation.type === 'DIRECT' ? (
-                                                        <Avatar>
-                                                            <AvatarImage
-                                                                src={otherParticipant?.avatarUrl}
-                                                            />
-                                                            <AvatarFallback>
-                                                                <User className="h-5 w-5 text-[#80848e]" />
-                                                            </AvatarFallback>
-                                                        </Avatar>
-                                                    ) : (
-                                                        <Avatar>
-                                                            <AvatarImage
-                                                                src={otherParticipant?.avatarUrl}
-                                                            />
-                                                            <AvatarFallback>
-                                                                <UserPlus2Icon className="h-5 w-5 text-[#80848e]" />
-                                                            </AvatarFallback>
-                                                        </Avatar>
-                                                    )}
-                                                    <span className="truncate">{chatName}</span>
-                                                </div>
-                                            </Link>
-                                        </li>
-                                    );
-                                })}
+                                {conversations.map((conversation) => (
+                                    <DirectChat
+                                        conversation={conversation}
+                                        userId={user.id}
+                                        key={conversation.id}
+                                    />
+                                ))}
                             </ul>
                         ) : (
                             <div className="p-4 text-center text-xs text-[#949ba4] italic">
