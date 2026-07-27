@@ -14,7 +14,7 @@ export default async function proxy(request: NextRequest) {
     const isProtectedRoute = pathname.startsWith('/dashboard') || pathname.startsWith('/profile');
 
     if (isProtectedRoute && !accessToken && !hasRefreshToken) {
-        return NextResponse.redirect(new URL('/login', request.url));
+        return NextResponse.redirect(new URL('/auth/login', request.url));
     }
     if (hasRefreshToken && accessToken && isAuthRoute) {
         return NextResponse.redirect(new URL('/dashboard', request.url));
