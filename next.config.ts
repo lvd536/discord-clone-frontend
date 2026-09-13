@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
         ],
     },
     allowedDevOrigins: ['192.168.0.108'],
+    transpilePackages: ['lucide-react'],
 };
 
 export default nextConfig;
