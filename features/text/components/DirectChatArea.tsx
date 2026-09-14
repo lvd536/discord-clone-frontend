@@ -7,7 +7,12 @@ import { useChat, useParticipants } from '@livekit/components-react';
 import { Phone, Send } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { getDirectMessages, sendDirectMessage } from '@/features/direct-chat/actions';
+import {
+    deleteDirectMessage,
+    editDirectMessage,
+    getDirectMessages,
+    sendDirectMessage,
+} from '@/features/direct-chat/actions';
 import { GroupActions } from '@/features/direct-chat/components';
 
 import { INormalizedMessage } from '../types/message.types';
@@ -17,6 +22,7 @@ interface IProps {
     conversationId: string;
     channelName: string;
     channelType: ConversationType;
+    currentUserId: string;
     isOwner: boolean;
     onStartCall?: () => void;
     inCallMode?: boolean;
@@ -25,6 +31,7 @@ interface IProps {
 export default function DirectChatArea({
     channelName,
     conversationId,
+    currentUserId,
     onStartCall,
     inCallMode,
     channelType,
@@ -52,6 +59,7 @@ export default function DirectChatArea({
                     avatarUrl: msg.sender.avatarUrl,
                     content: msg.content,
                     timestamp: new Date(msg.createdAt).getTime(),
+                    senderId: msg.senderId,
                 }));
 
                 setHistory(normalized);
@@ -86,6 +94,26 @@ export default function DirectChatArea({
         }
     };
 
+    const handleEditMessage = async (messageId: string, content: string) => {
+        const res = await editDirectMessage({ conversationId, messageId, content });
+        if (res.success) {
+            setHistory((prev) =>
+                prev.map((m) => (m.id === messageId ? { ...m, content, isUpdated: true } : m)),
+            );
+        } else {
+            throw new Error(res.error);
+        }
+    };
+
+    const handleDeleteMessage = async (messageId: string) => {
+        const res = await deleteDirectMessage({ conversationId, messageId });
+        if (res.success) {
+            setHistory((prev) => prev.filter((m) => m.id !== messageId));
+        } else {
+            throw new Error(res.error);
+        }
+    };
+
     const livekitMessages: INormalizedMessage[] = chatMessages.map((msg) => {
         let avatarUrl = '';
 
@@ -101,6 +129,7 @@ export default function DirectChatArea({
         return {
             id: `${msg.timestamp}-${msg.from?.identity}`,
             senderName: msg.from?.name || msg.from?.identity || 'Unknown',
+            senderId: msg.from?.identity,
             avatarUrl,
             content: msg.message,
             timestamp: msg.timestamp,
@@ -157,6 +186,9 @@ export default function DirectChatArea({
                     <ChatAreaMessage
                         message={msg}
                         chatEndRef={index === 1 ? chatEndRef : undefined}
+                        currentUserId={currentUserId}
+                        onEdit={handleEditMessage}
+                        onDelete={handleDeleteMessage}
                         key={msg.id}
                     />
                 ))}

@@ -31,7 +31,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
     refetchUser: async () => {
         const response = await refetchUserData();
-
         if (response.success && response.data) {
             set({
                 profile: response.data.profile,
