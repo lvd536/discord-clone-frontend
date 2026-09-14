@@ -69,7 +69,7 @@ export default async function ServerLayout({ params, children }: IProps) {
 
                                                 <Trash
                                                     size={14}
-                                                    className="text-[#80848e] transition-colors group-hover:text-[#dbdee1] hover:text-red-500/70"
+                                                    className="text-[#dbdee1] opacity-0 transition-[color,opacity] group-hover:opacity-100 hover:text-red-500/70"
                                                 />
                                             </div>
                                         </Link>
