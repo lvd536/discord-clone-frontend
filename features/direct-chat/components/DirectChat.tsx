@@ -78,7 +78,7 @@ export default function DirectChat({ conversation, userId }: IProps) {
                             </Avatar>
 
                             <div className="absolute -right-0.5 -bottom-0.5 flex items-center justify-center">
-                                <span className="relative flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#2b2d31] p-[2px]">
+                                <span className="relative flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#2b2d31] p-0.5">
                                     <span
                                         className={`h-full w-full rounded-full ${
                                             isOnline ? 'bg-[#23a55a]' : 'bg-[#80848e]'

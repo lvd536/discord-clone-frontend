@@ -1,14 +1,12 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { User, UserPlus2Icon, X } from 'lucide-react';
-
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Search } from 'lucide-react';
 
 import { getProfile } from '@/features/auth/actions';
 import { getUserConversations } from '@/features/direct-chat/actions';
 import { CreateGroupModal } from '@/features/direct-chat/components';
 import DirectChat from '@/features/direct-chat/components/DirectChat';
+import FriendsTabButton from '@/features/direct-chat/components/FriendsTabButton';
 import { getUserServers } from '@/features/server/actions';
 import { MobileSidebar, SidebarUser } from '@/features/shared/components';
 import { ROUTES } from '@/features/shared/constants/route.constants';
@@ -34,20 +32,26 @@ export default async function DirectLayout({ children }: IProps) {
         <div className="flex flex-1 overflow-hidden">
             <div className="z-10 hidden w-60 shrink-0 flex-col justify-between bg-[#2b2d31] md:flex">
                 <div className="flex flex-col">
-                    <div className="flex h-12 cursor-pointer items-center justify-between gap-2 border-b border-[#1f2023] px-4 font-bold text-white shadow-sm hover:bg-[#35363c]/40">
-                        <span className="text-sm">Личные сообщения</span>
-                        <Link
-                            href={ROUTES.DASHBOARD.ME.FRIENDS.BASE}
-                            className="text-xs text-[#23a55a] hover:underline"
+                    <div className="flex h-12 items-center border-b border-[#1f2023] px-3 shadow-xs">
+                        <button
+                            type="button"
+                            className="flex h-7 w-full cursor-pointer items-center justify-between rounded bg-[#1e1f22] px-2 text-xs font-medium text-[#949ba4] transition-colors hover:text-[#dbdee1]"
                         >
-                            Друзья
-                        </Link>
-                        <CreateGroupModal />
+                            <span>Найти или начать беседу</span>
+                            <Search className="h-3.5 w-3.5 text-[#949ba4]" />
+                        </button>
                     </div>
 
-                    <div className="mt-4 px-2">
+                    <div className="px-2 pt-3">
+                        <FriendsTabButton />
+
+                        <div className="mt-4 flex items-center justify-between px-2 pb-1 text-[11px] font-bold tracking-wider text-[#949ba4] uppercase">
+                            <span>Личные сообщения</span>
+                            <CreateGroupModal />
+                        </div>
+
                         {conversations && conversations.length > 0 ? (
-                            <ul className="discord-scroll space-y-0.5">
+                            <ul className="discord-scroll mt-1 space-y-0.5">
                                 {conversations.map((conversation) => (
                                     <DirectChat
                                         conversation={conversation}
