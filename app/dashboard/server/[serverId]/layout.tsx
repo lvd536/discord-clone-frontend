@@ -32,7 +32,7 @@ export default async function ServerLayout({ params, children }: IProps) {
         <div className="flex flex-1 overflow-hidden">
             <div className="z-10 hidden w-60 shrink-0 flex-col justify-between bg-[#2b2d31] md:flex">
                 <div className="flex flex-col">
-                    <div className="flex h-12 cursor-pointer items-center justify-between border-b border-[#1f2023] px-4 font-bold text-white shadow-sm hover:bg-[#35363c]/40">
+                    <div className="flex h-12 cursor-pointer items-center justify-between px-4 font-bold text-white shadow-sm hover:bg-[#35363c]/40">
                         <span>{serverInfo.name}</span>
                         <ServerActions serverInfo={serverInfo} />
                     </div>

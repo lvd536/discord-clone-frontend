@@ -6,11 +6,12 @@ import { useChat } from '@livekit/components-react';
 import { Hash, Send, Users } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { useAuthStore } from '@/features/auth/store/auth.store';
 import { getServerMembers } from '@/features/server/actions';
 import { MembersSheet } from '@/features/server/components';
 import { ServerMembersType } from '@/features/shared/types/channel.types';
 
-import { createMessage, getMessageHistory } from '../actions';
+import { createMessage, editMessage, getMessageHistory } from '../actions';
 import { INormalizedMessage } from '../types/message.types';
 import ChatAreaMessage from './ChatAreaMessage';
 
@@ -21,6 +22,7 @@ interface IProps {
 }
 
 export default function ChatArea({ channelName, channelId, serverId }: IProps) {
+    const { profile } = useAuthStore();
     const { chatMessages, send, isSending } = useChat();
     const [history, setHistory] = useState<INormalizedMessage[]>([]);
     const [members, setMembers] = useState<ServerMembersType>([]);
@@ -32,14 +34,15 @@ export default function ChatArea({ channelName, channelId, serverId }: IProps) {
         const fetchServerData = async () => {
             try {
                 const [historyResponse, membersResponse] = await Promise.all([
-                    await getMessageHistory({ serverId, channelId }),
-                    await getServerMembers(serverId),
+                    getMessageHistory({ serverId, channelId }),
+                    getServerMembers(serverId),
                 ]);
                 const dbMessages = historyResponse.success ? historyResponse.data : [];
                 const dbMembers = membersResponse.success ? membersResponse.data : [];
 
                 const normalized = dbMessages.map((msg) => ({
                     id: msg.id,
+                    senderId: msg.member?.user?.id,
                     senderName: msg.member.user.displayName,
                     avatarUrl: msg.member.user.avatarUrl,
                     content: msg.content,
@@ -79,6 +82,17 @@ export default function ChatArea({ channelName, channelId, serverId }: IProps) {
         }
     };
 
+    const handleEditMessage = async (messageId: string, content: string) => {
+        const res = await editMessage({ serverId, channelId, messageId, content });
+        if (res.success) {
+            setHistory((prev) =>
+                prev.map((m) => (m.id === messageId ? { ...m, content, isUpdated: true } : m)),
+            );
+        } else {
+            throw new Error(res.error);
+        }
+    };
+
     const livekitMessages: INormalizedMessage[] = chatMessages.map((msg) => {
         let avatarUrl = '';
 
@@ -93,6 +107,7 @@ export default function ChatArea({ channelName, channelId, serverId }: IProps) {
 
         return {
             id: `${msg.timestamp}-${msg.from?.identity}`,
+            senderId: msg.from?.identity,
             senderName: msg.from?.name || msg.from?.identity || 'Unknown',
             avatarUrl,
             content: msg.message,
@@ -105,23 +120,30 @@ export default function ChatArea({ channelName, channelId, serverId }: IProps) {
     const allMessages = [...livekitMessages, ...history];
 
     return (
-        <div className="flex h-screen max-h-screen w-full flex-1 flex-col overflow-hidden bg-[#313338] text-white">
-            <div className="flex h-12 min-h-12 w-full shrink-0 items-center justify-between border-b border-[#1f2023] bg-[#313338] px-4">
+        <div className="flex h-full flex-1 flex-col overflow-hidden bg-[#313338] text-white">
+            <div className="z-10 flex h-12 min-h-12 w-full shrink-0 items-center justify-between border-b border-black/20 bg-[#313338] px-4 shadow-[0_1px_2px_rgba(0,0,0,0.2)]">
                 <div className="flex items-center gap-2">
                     <Hash className="h-5 w-5 text-[#80848e]" />
                     <span className="font-bold text-[#f2f3f5]">{channelName}</span>
                 </div>
-                <button className="md:hidden" onClick={() => setIsMembersOpen((prev) => !prev)}>
-                    <Users size={24} />
+
+                <button
+                    className="cursor-pointer rounded p-1.5 text-[#b5bac1] transition-colors hover:bg-[#35363c]/60 hover:text-[#dbdee1] md:hidden"
+                    onClick={() => setIsMembersOpen((prev) => !prev)}
+                    title="Участники"
+                >
+                    <Users size={20} />
                 </button>
             </div>
 
-            <div className="flex h-[calc(100vh-48px)] w-full items-stretch overflow-hidden">
+            <div className="flex flex-1 items-stretch overflow-hidden">
                 <div className="flex h-full min-w-0 flex-1 flex-col bg-[#313338]">
                     <div className="discord-scroll flex flex-1 flex-col-reverse overflow-y-auto p-4">
                         {allMessages.map((msg, index) => (
                             <ChatAreaMessage
                                 message={msg}
+                                currentUserId={profile?.id}
+                                onEdit={handleEditMessage}
                                 chatEndRef={index === 0 ? chatEndRef : undefined}
                                 key={msg.id}
                             />
