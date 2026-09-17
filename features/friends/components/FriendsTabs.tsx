@@ -9,8 +9,8 @@ interface IProps {
 
 export default function FriendsTabs({ activeTab, setActiveTab }: IProps) {
     return (
-        <div className="flex h-12 w-full shrink-0 items-center justify-between border-b border-[#1f2023] bg-[#313338] px-4 select-none">
-            <div className="no-scrollbar flex items-center gap-4 overflow-x-auto">
+        <div className="flex h-12 w-full shrink-0 items-center justify-between bg-[#313338] px-4 select-none">
+            <div className="no-scrollbar flex items-center gap-4 overflow-x-auto text-nowrap">
                 <span className="flex items-center gap-2 text-sm font-bold text-white">
                     <Users className="h-5 w-5 text-[#80848e]" />
                     Друзья

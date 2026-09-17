@@ -6,7 +6,6 @@ import { getProfile } from '@/features/auth/actions';
 import { getUserConversations } from '@/features/direct-chat/actions';
 import { CreateGroupModal } from '@/features/direct-chat/components';
 import ConversationsList from '@/features/direct-chat/components/ConversationList';
-import DirectChat from '@/features/direct-chat/components/DirectChat';
 import FriendsTabButton from '@/features/direct-chat/components/FriendsTabButton';
 import { getUserServers } from '@/features/server/actions';
 import { MobileSidebar, SidebarUser } from '@/features/shared/components';
@@ -71,7 +70,7 @@ export default async function DirectLayout({ children }: IProps) {
             </div>
 
             <div className="flex flex-1 flex-col overflow-hidden">
-                <div className="z-30 flex h-12 w-full shrink-0 items-center justify-between border-b border-[#1f2023] bg-[#313338] px-4 select-none md:hidden">
+                <div className="z-30 flex h-12 w-full shrink-0 items-center justify-between bg-[#313338] px-4 select-none md:hidden">
                     <MobileSidebar
                         userServers={userServers}
                         user={user}
