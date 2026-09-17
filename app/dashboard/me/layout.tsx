@@ -5,6 +5,7 @@ import { Search } from 'lucide-react';
 import { getProfile } from '@/features/auth/actions';
 import { getUserConversations } from '@/features/direct-chat/actions';
 import { CreateGroupModal } from '@/features/direct-chat/components';
+import ConversationsList from '@/features/direct-chat/components/ConversationList';
 import DirectChat from '@/features/direct-chat/components/DirectChat';
 import FriendsTabButton from '@/features/direct-chat/components/FriendsTabButton';
 import { getUserServers } from '@/features/server/actions';
@@ -51,15 +52,10 @@ export default async function DirectLayout({ children }: IProps) {
                         </div>
 
                         {conversations && conversations.length > 0 ? (
-                            <ul className="discord-scroll mt-1 space-y-0.5">
-                                {conversations.map((conversation) => (
-                                    <DirectChat
-                                        conversation={conversation}
-                                        userId={user.id}
-                                        key={conversation.id}
-                                    />
-                                ))}
-                            </ul>
+                            <ConversationsList
+                                conversations={conversations}
+                                currentUserId={user.id}
+                            />
                         ) : (
                             <div className="p-4 text-center text-xs text-[#949ba4] italic">
                                 Начните общение прямо сейчас!

@@ -1,17 +1,22 @@
 'use client';
 
+import { useLayoutEffect } from 'react';
+
 import { Input } from '@/components/ui/input';
 
 import {
+    FriendCard,
     FriendsActivities,
     FriendsAddTab,
     FriendsTabs,
-    OnlineFriend,
     PendingRequest,
 } from '@/features/friends/components';
 import useFriends from '@/features/friends/hooks';
+import { usePresenceStore } from '@/features/shared/store/presence.store';
 
 export default function FriendsPage() {
+    const checkUsersPresence = usePresenceStore((state) => state.checkUsersPresence);
+
     const {
         activeTab,
         friendEmailInput,
@@ -27,6 +32,16 @@ export default function FriendsPage() {
         setFriendEmailInput,
         setSearchQuery,
     } = useFriends();
+
+    useLayoutEffect(() => {
+        if (!friends || friends.length === 0) return;
+
+        const targetFriendsIds: string[] = friends.map((f) => f.id);
+
+        if (targetFriendsIds.length > 0) {
+            checkUsersPresence(targetFriendsIds);
+        }
+    }, [friends, checkUsersPresence]);
 
     return (
         <div className="flex h-full flex-1 flex-col overflow-hidden bg-[#313338] text-white">
@@ -65,10 +80,11 @@ export default function FriendsPage() {
                                     )
                                 ) : friends.length > 0 ? (
                                     friends.map((friend) => (
-                                        <OnlineFriend
+                                        <FriendCard
                                             friend={friend}
                                             handleDeclineOrRemove={handleDeclineOrRemove}
                                             handleStartChat={handleStartChat}
+                                            hideOffline={activeTab === 'ONLINE'}
                                             key={friend.id}
                                         />
                                     ))

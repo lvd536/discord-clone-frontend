@@ -1,5 +1,8 @@
 'use client';
 
+import { useEffect } from 'react';
+
+import { usePresenceStore } from '@/features/shared/store/presence.store';
 import { ServerMembersType } from '@/features/shared/types/channel.types';
 
 import { UserPopover } from './UserPopover';
@@ -15,6 +18,15 @@ interface IGroupedMember {
 }
 
 export default function MemberList({ members }: IProps) {
+    const { onlineUsers, checkUsersPresence } = usePresenceStore();
+
+    useEffect(() => {
+        const memberIds = members.map((m) => m.user.id);
+        if (memberIds.length > 0) {
+            checkUsersPresence(memberIds);
+        }
+    }, [members, checkUsersPresence]);
+
     const groupedMembers = members.reduce(
         (acc, member) => {
             const primaryRole = member.roles && member.roles.length > 0 ? member.roles[0] : null;
@@ -56,10 +68,13 @@ export default function MemberList({ members }: IProps) {
                         {group.members.map((member) => {
                             const nameStyle = { color: group.roleColor };
 
+                            const isOnline = onlineUsers.has(member.user.id);
+
                             return (
                                 <UserPopover
                                     member={member}
                                     nameStyle={nameStyle}
+                                    isOnline={isOnline}
                                     key={member.id}
                                 />
                             );

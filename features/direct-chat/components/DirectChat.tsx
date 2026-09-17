@@ -8,6 +8,7 @@ import { Users2, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import { ROUTES } from '@/features/shared/constants/route.constants';
+import { usePresenceStore } from '@/features/shared/store/presence.store';
 
 import { UserConversationType } from '../types/direct-chat.types';
 
@@ -19,6 +20,7 @@ interface IProps {
 export default function DirectChat({ conversation, userId }: IProps) {
     const router = useRouter();
     const pathname = usePathname();
+    const onlineUsers = usePresenceStore((state) => state.onlineUsers);
 
     const isDirect = conversation.type === 'DIRECT';
     const chatUrl = ROUTES.DASHBOARD.ME.ID(conversation.id);
@@ -41,7 +43,7 @@ export default function DirectChat({ conversation, userId }: IProps) {
           ? 'В сети'
           : `${participantCount} участников`;
 
-    const isOnline = true;
+    const isOnline = Boolean(otherParticipant && onlineUsers.has(otherParticipant.id));
 
     const initials = (chatName || 'DM').slice(0, 2).toUpperCase();
 

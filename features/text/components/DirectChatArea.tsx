@@ -15,14 +15,17 @@ import {
 } from '@/features/direct-chat/actions';
 import { GroupActions } from '@/features/direct-chat/components';
 
+import { useTypingIndicator } from '../hooks/useTypingIndicator';
 import { INormalizedMessage } from '../types/message.types';
 import ChatAreaMessage from './ChatAreaMessage';
+import TypingIndicator from './TypingIndicator';
 
 interface IProps {
     conversationId: string;
     channelName: string;
     channelType: ConversationType;
     currentUserId: string;
+    currentUsername: string;
     isOwner: boolean;
     onStartCall?: () => void;
     inCallMode?: boolean;
@@ -32,11 +35,13 @@ export default function DirectChatArea({
     channelName,
     conversationId,
     currentUserId,
+    currentUsername,
     onStartCall,
     inCallMode,
     channelType,
     isOwner,
 }: IProps) {
+    const { sendTyping, typingNames } = useTypingIndicator(currentUserId, currentUsername);
     const { chatMessages, send, isSending } = useChat();
     const participants = useParticipants();
 
@@ -194,12 +199,17 @@ export default function DirectChatArea({
                 ))}
             </div>
 
+            <TypingIndicator names={typingNames} />
+
             <form onSubmit={handleSendMessage} className="shrink-0 bg-[#313338] p-4">
                 <div className="relative flex items-center rounded-lg bg-[#383a40] px-4 py-2.5">
                     <input
                         type="text"
                         value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
+                        onChange={(e) => {
+                            setInputValue(e.target.value);
+                            sendTyping();
+                        }}
                         placeholder={`Отправить сообщение в #${channelName}`}
                         className="w-full bg-transparent text-sm text-[#dbdee1] placeholder-[#80848e] focus:outline-none"
                         disabled={isSending}

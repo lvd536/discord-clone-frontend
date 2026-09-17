@@ -60,6 +60,7 @@ export default async function PrivateMessagesPage({ params }: IProps) {
                 channelType={currentChat.type}
                 isOwner={user.id === currentChat.ownerId}
                 currentUserId={user.id}
+                currentUsername={user.displayName}
             />
         </div>
     );

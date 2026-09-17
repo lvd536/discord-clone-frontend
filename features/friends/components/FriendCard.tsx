@@ -1,13 +1,27 @@
 import { User } from '@backend/types/__generated__/client';
 import { MessageSquare, UserMinus } from 'lucide-react';
 
+import { usePresenceStore } from '@/features/shared/store/presence.store';
+
 interface IProps {
     friend: User;
+    hideOffline?: boolean;
     handleStartChat: (friendId: string) => void;
     handleDeclineOrRemove: (friendId: string) => void;
 }
 
-export default function OnlineFriend({ friend, handleDeclineOrRemove, handleStartChat }: IProps) {
+export default function FriendCard({
+    friend,
+    handleDeclineOrRemove,
+    handleStartChat,
+    hideOffline,
+}: IProps) {
+    const { onlineUsers } = usePresenceStore();
+
+    const isOnline = onlineUsers.has(friend.id);
+
+    if (hideOffline && !isOnline) return null;
+
     return (
         <div className="group flex items-center justify-between rounded p-2.5 transition-all hover:bg-[#35363c]/40">
             <div className="flex items-center gap-3">
@@ -16,7 +30,9 @@ export default function OnlineFriend({ friend, handleDeclineOrRemove, handleStar
                 </div>
                 <div className="flex flex-col">
                     <span className="text-sm font-bold text-white">{friend.displayName}</span>
-                    <span className="text-xs text-[#23a55a]">В сети</span>
+                    <span className={`text-xs ${isOnline ? 'text-[#23a55a]' : 'text-[#80848e]'}`}>
+                        {isOnline ? 'В сети' : 'Не в сети'}
+                    </span>
                 </div>
             </div>
 

@@ -15,6 +15,7 @@ interface IProps {
     channelName: string;
     channelType: ConversationType;
     currentUserId: string;
+    currentUsername: string;
     isOwner: boolean;
 }
 
@@ -24,6 +25,7 @@ export default function DirectTextChannel({
     channelName,
     channelType,
     currentUserId,
+    currentUsername,
     isOwner,
 }: IProps) {
     const { activeChannelId, isConnected, connect } = useVoiceStore();
@@ -57,6 +59,7 @@ export default function DirectTextChannel({
                         inCallMode={true}
                         channelType={channelType}
                         currentUserId={currentUserId}
+                        currentUsername={currentUsername}
                         isOwner={isOwner}
                     />
                 </div>
@@ -81,6 +84,7 @@ export default function DirectTextChannel({
                 onStartCall={handleStartCall}
                 channelType={channelType}
                 currentUserId={currentUserId}
+                currentUsername={currentUsername}
                 isOwner={isOwner}
             />
 

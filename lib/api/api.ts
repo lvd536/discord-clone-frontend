@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { ROUTES } from '@/features/shared/constants/route.constants';
 import { BASE_URL } from '@/features/shared/constants/db.constants';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 
 export const api = axios.create({
     baseURL: BASE_URL,
@@ -78,6 +78,32 @@ api.interceptors.response.use(
 
                     const newAccessToken = refreshResponse.data.access_token;
                     if (newAccessToken) {
+                        try {
+                            cookieStore.set('access_token', newAccessToken, {
+                                path: '/',
+                                maxAge: 15 * 60,
+                                sameSite: 'lax',
+                            });
+
+                            const setCookieHeaders = refreshResponse.headers['set-cookie'];
+                            if (setCookieHeaders) {
+                                const refreshCookieStr = setCookieHeaders.find((c: string) =>
+                                    c.startsWith('refresh_token='),
+                                );
+                                if (refreshCookieStr) {
+                                    const newRefreshToken = refreshCookieStr
+                                        .split(';')[0]
+                                        .split('=')[1];
+                                    cookieStore.set('refresh_token', newRefreshToken, {
+                                        path: '/',
+                                        maxAge: 14 * 24 * 60 * 60,
+                                        httpOnly: true,
+                                        sameSite: 'lax',
+                                    });
+                                }
+                            }
+                        } catch {}
+
                         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                         return api(originalRequest);
                     }
@@ -97,13 +123,14 @@ api.interceptors.response.use(
 
                     if (newAccessToken) {
                         document.cookie = `access_token=${newAccessToken}; path=/; max-age=900; SameSite=Lax`;
+
                         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                         return api(originalRequest);
                     }
                 } catch (refreshError) {
                     console.error('Критическая ошибка обновления токена на клиенте:', refreshError);
                     document.cookie =
-                        'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                        'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
                     window.location.href = ROUTES.AUTH.LOGIN;
                 }
             }
