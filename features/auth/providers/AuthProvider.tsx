@@ -22,6 +22,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     useEffect(() => {
         const initializeAuth = async () => {
             console.info('Auth: initializeAuth call');
+            await refetchUser();
 
             const token = document.cookie
                 .split('; ')
@@ -31,7 +32,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
             if (token) {
                 console.info('Auth: access token found');
                 try {
-                    await refetchUser();
                     setAuthToken(token);
                 } catch (error) {
                     console.error('Ошибка восстановления сессии:', error);
