@@ -12,8 +12,10 @@ import { MembersSheet } from '@/features/server/components';
 import { ServerMembersType } from '@/features/shared/types/channel.types';
 
 import { createMessage, editMessage, getMessageHistory } from '../actions';
+import { useTypingIndicator } from '../hooks/useTypingIndicator';
 import { INormalizedMessage } from '../types/message.types';
 import ChatAreaMessage from './ChatAreaMessage';
+import TypingIndicator from './TypingIndicator';
 
 interface IProps {
     serverId: string;
@@ -23,6 +25,7 @@ interface IProps {
 
 export default function ChatArea({ channelName, channelId, serverId }: IProps) {
     const { profile } = useAuthStore();
+    const { sendTyping, typingNames } = useTypingIndicator(profile?.id, profile?.displayName);
     const { chatMessages, send, isSending } = useChat();
     const [history, setHistory] = useState<INormalizedMessage[]>([]);
     const [members, setMembers] = useState<ServerMembersType>([]);
@@ -150,12 +153,17 @@ export default function ChatArea({ channelName, channelId, serverId }: IProps) {
                         ))}
                     </div>
 
+                    <TypingIndicator names={typingNames} />
+
                     <form onSubmit={handleSendMessage} className="shrink-0 bg-[#313338] p-4">
                         <div className="relative flex items-center rounded-lg bg-[#383a40] px-4 py-2.5">
                             <input
                                 type="text"
                                 value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
+                                onChange={(e) => {
+                                    sendTyping();
+                                    setInputValue(e.target.value);
+                                }}
                                 placeholder={`Отправить сообщение в #${channelName}`}
                                 className="w-full bg-transparent text-sm text-[#dbdee1] placeholder-[#80848e] focus:outline-none"
                                 disabled={isSending}

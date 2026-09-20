@@ -11,9 +11,10 @@ interface TypingPayload {
 
 export function useTypingIndicator(currentUserId?: string, currentUsername?: string) {
     const room = useRoomContext();
-    const [typingUsers, setTypingUsers] = useState<
-        Map<string, { name: string; timeout: NodeJS.Timeout }>
-    >(new Map());
+
+    const [typingUsers, setTypingUsers] = useState<Map<string, string>>(new Map());
+
+    const timeoutsRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
     const lastSentRef = useRef<number>(0);
 
     const sendTyping = async () => {
@@ -36,28 +37,32 @@ export function useTypingIndicator(currentUserId?: string, currentUsername?: str
     useEffect(() => {
         if (!room) return;
 
+        const timeouts = timeoutsRef.current;
+
         const handleDataReceived = (payload: Uint8Array) => {
             try {
                 const decoded = JSON.parse(new TextDecoder().decode(payload)) as TypingPayload;
 
                 if (decoded.type === 'TYPING' && decoded.userId !== currentUserId) {
+                    const existingTimeout = timeouts.get(decoded.userId);
+                    if (existingTimeout) {
+                        clearTimeout(existingTimeout);
+                    }
+
+                    const timeout = setTimeout(() => {
+                        setTypingUsers((cur) => {
+                            const updated = new Map(cur);
+                            updated.delete(decoded.userId);
+                            return updated;
+                        });
+                        timeouts.delete(decoded.userId);
+                    }, 4000);
+
+                    timeouts.set(decoded.userId, timeout);
+
                     setTypingUsers((prev) => {
                         const next = new Map(prev);
-
-                        if (next.has(decoded.userId)) {
-                            clearTimeout(next.get(decoded.userId)!.timeout);
-                        }
-
-                        const timeout = setTimeout(() => {
-                            setTypingUsers((cur) => {
-                                const updated = new Map(cur);
-                                updated.delete(decoded.userId);
-                                return updated;
-                            });
-                        }, 3500);
-
-                        next.set(decoded.userId, { name: decoded.displayName, timeout });
-
+                        next.set(decoded.userId, decoded.displayName);
                         return next;
                     });
                 }
@@ -68,10 +73,12 @@ export function useTypingIndicator(currentUserId?: string, currentUsername?: str
 
         return () => {
             room.off(RoomEvent.DataReceived, handleDataReceived);
+            timeouts.forEach((timeout) => clearTimeout(timeout));
+            timeouts.clear();
         };
     }, [room, currentUserId]);
 
-    const typingNames = Array.from(typingUsers.values()).map((u) => u.name);
+    const typingNames = Array.from(typingUsers.values());
 
     return {
         sendTyping,
