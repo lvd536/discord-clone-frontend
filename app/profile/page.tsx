@@ -29,14 +29,14 @@ export default function ProfilePage() {
     return (
         <div className="discord-scroll w-full flex-1 overflow-y-auto bg-[#313338] px-6 py-10 select-none">
             <div className="mx-auto max-w-2xl space-y-6">
-                <div className="relative items-center gap-2">
+                <div className="flex items-center gap-2 sm:relative">
                     <Link
                         href={ROUTES.DASHBOARD.ME.BASE}
-                        className="hover:bg-accent absolute top-1 -left-10 rounded-full p-2 transition-colors duration-300"
+                        className="hover:bg-accent rounded-full p-2 transition-colors duration-300 sm:absolute sm:top-1 sm:-left-10"
                     >
                         <ArrowLeft size={18} />
                     </Link>
-                    <h1 className="pt-2 text-xl font-bold tracking-wide text-white">
+                    <h1 className="text-xl font-bold tracking-wide text-white sm:pt-2">
                         Моя учетная запись
                     </h1>
                 </div>

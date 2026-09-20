@@ -27,9 +27,9 @@ export default function ProfileCredits() {
     if (!profile) return null;
 
     return (
-        <div className="mx-6 mt-4 space-y-4 rounded-lg bg-[#2b2d31] p-4">
-            <div className="flex items-center justify-between border-b border-[#3f4147]/30 pb-3">
-                <div className="space-y-1">
+        <div className="mx-2 mt-4 space-y-4 rounded-lg bg-[#2b2d31] p-4 sm:mx-6">
+            <div className="flex flex-col justify-between gap-3 border-b border-[#3f4147]/30 pb-3 sm:flex-row sm:items-center sm:gap-0">
+                <div className="wrap-break-words min-w-0 space-y-1">
                     <span className="block text-[10px] font-bold tracking-wider text-[#949ba4] uppercase">
                         Отображаемое имя
                     </span>
@@ -39,14 +39,14 @@ export default function ProfileCredits() {
                 </div>
                 <Button
                     size="sm"
-                    className="cursor-pointer bg-[#4e5058] text-xs font-medium text-white hover:bg-[#6d6f78]"
+                    className="w-full cursor-pointer bg-[#4e5058] text-xs font-medium text-white hover:bg-[#6d6f78] sm:w-auto"
                 >
                     Изменить
                 </Button>
             </div>
 
-            <div className="flex items-center justify-between border-b border-[#3f4147]/30 pb-3">
-                <div className="space-y-1">
+            <div className="flex flex-col justify-between gap-3 border-b border-[#3f4147]/30 pb-3 sm:flex-row sm:items-center sm:gap-0">
+                <div className="wrap-break-words min-w-0 space-y-1">
                     <span className="block text-[10px] font-bold tracking-wider text-[#949ba4] uppercase">
                         Электронная почта
                     </span>
@@ -54,14 +54,14 @@ export default function ProfileCredits() {
                 </div>
                 <Button
                     size="sm"
-                    className="cursor-pointer bg-[#4e5058] text-xs font-medium text-white hover:bg-[#6d6f78]"
+                    className="w-full cursor-pointer bg-[#4e5058] text-xs font-medium text-white hover:bg-[#6d6f78] sm:w-auto"
                 >
                     Изменить
                 </Button>
             </div>
 
-            <div className="flex items-center justify-between">
-                <div className="space-y-1">
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center sm:gap-0">
+                <div className="wrap-break-words min-w-0 space-y-1">
                     <span className="block text-[10px] font-bold tracking-wider text-[#949ba4] uppercase">
                         Верификация почты
                     </span>
@@ -76,12 +76,13 @@ export default function ProfileCredits() {
                         size="sm"
                         onClick={handleResendVerification}
                         disabled={isSendingCode}
-                        className="cursor-pointer bg-[#23a55a] text-xs font-medium text-white hover:bg-[#1a7f37]"
+                        className="w-full cursor-pointer bg-[#23a55a] text-xs font-medium text-white hover:bg-[#1a7f37] sm:w-auto"
                     >
                         {isSendingCode ? 'Отправка...' : 'Подтвердить'}
                     </Button>
                 ) : (
-                    <span className="rounded bg-[#23a55a]/10 px-2 py-1 text-xs font-semibold text-[#23a55a]">
+                    /* self-start центрирует бейдж по левому краю на мобилках вместо растягивания */
+                    <span className="self-start rounded bg-[#23a55a]/10 px-2 py-1 text-xs font-semibold text-[#23a55a] sm:self-auto">
                         Активно
                     </span>
                 )}
