@@ -2,17 +2,17 @@
 
 import { useLayoutEffect } from 'react';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { ArrowLeft } from 'lucide-react';
 
 import { useAuthStore } from '@/features/auth/store/auth.store';
 import { ProfileCredits, ProfileHeader, ProfileIntegrations } from '@/features/profile/components';
+import { ROUTES } from '@/features/shared/constants/route.constants';
 
 export default function ProfilePage() {
     const { profile, refetchUser } = useAuthStore();
-    const router = useRouter();
-
     useLayoutEffect(() => {
         if (!profile) refetchUser();
     }, [profile, refetchUser]);
@@ -26,14 +26,18 @@ export default function ProfilePage() {
             </div>
         );
     }
+
     return (
         <div className="discord-scroll w-full flex-1 overflow-y-auto bg-[#313338] px-6 py-10 select-none">
             <div className="mx-auto max-w-2xl space-y-6">
                 <div className="relative items-center gap-2">
-                    <button className="absolute top-1 -left-10" onClick={() => router.back()}>
+                    <Link
+                        href={ROUTES.DASHBOARD.ME.BASE}
+                        className="hover:bg-accent absolute top-1 -left-10 rounded-full p-2 transition-colors duration-300"
+                    >
                         <ArrowLeft size={18} />
-                    </button>
-                    <h1 className="text-xl font-bold tracking-wide text-white">
+                    </Link>
+                    <h1 className="pt-2 text-xl font-bold tracking-wide text-white">
                         Моя учетная запись
                     </h1>
                 </div>
