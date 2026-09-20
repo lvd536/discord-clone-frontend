@@ -85,9 +85,9 @@ export default function MobileSidebar({
                                 <MobileSidebarChannelList serverInfo={serverInfo} />
                             </div>
                         ) : conversations && conversations.length > 0 ? (
-                            <div className="w-60 shrink-0 flex-col justify-between bg-[#2b2d31]">
-                                <div className="flex flex-col">
-                                    <div className="mt-2 flex h-12 items-center border-b border-[#1f2023] pr-11 pl-3 shadow-xs">
+                            <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-[#2b2d31]">
+                                <div className="flex min-h-0 flex-1 flex-col">
+                                    <div className="mt-2 flex h-12 shrink-0 items-center border-b border-[#1f2023] pr-11 pl-3 shadow-xs">
                                         <button
                                             type="button"
                                             className="flex h-7 w-full cursor-pointer items-center justify-between rounded bg-[#1e1f22] px-2 text-xs font-medium text-[#949ba4] transition-colors hover:text-[#dbdee1]"
@@ -97,24 +97,18 @@ export default function MobileSidebar({
                                         </button>
                                     </div>
 
-                                    <div className="px-2 pt-3">
+                                    <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-2 pt-3">
                                         <FriendsTabButton />
 
-                                        <div className="mt-4 flex items-center justify-between px-2 pb-1 text-[11px] font-bold tracking-wider text-[#949ba4] uppercase">
+                                        <div className="mt-4 flex shrink-0 items-center justify-between px-2 pb-1 text-[11px] font-bold tracking-wider text-[#949ba4] uppercase">
                                             <span>Личные сообщения</span>
                                             <CreateGroupModal />
                                         </div>
 
-                                        {conversations && conversations.length > 0 ? (
-                                            <ConversationsList
-                                                conversations={conversations}
-                                                currentUserId={user.id}
-                                            />
-                                        ) : (
-                                            <div className="p-4 text-center text-xs text-[#949ba4] italic">
-                                                Начните общение прямо сейчас!
-                                            </div>
-                                        )}
+                                        <ConversationsList
+                                            conversations={conversations}
+                                            currentUserId={user.id}
+                                        />
                                     </div>
                                 </div>
                             </div>

@@ -33,7 +33,7 @@ export default function ConversationsList({ conversations, currentUserId }: IPro
     }, [conversations, currentUserId, checkUsersPresence]);
 
     return (
-        <ul className="discord-scroll mt-1 space-y-0.5">
+        <ul className="discord-scroll mt-1 h-full touch-pan-y space-y-0.5 overflow-y-auto overscroll-contain">
             {conversations.map((conversation) => (
                 <DirectChat
                     conversation={conversation}
