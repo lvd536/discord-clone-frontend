@@ -6,13 +6,16 @@ import { User } from '@backend/types/__generated__/client';
 import { toast } from 'sonner';
 
 import { getOrCreateDM } from '@/features/direct-chat/actions';
+import { useNotificationStore } from '@/features/notifications/store/notification.store';
+import { NOTIFICATION_TYPE } from '@/features/notifications/types/notification.types';
 import { ROUTES } from '@/features/shared/constants/route.constants';
 
 import { acceptFriendRequest, getFriends, removeFriend, sendFriendRequest } from '../actions';
 import { TabType } from '../types';
 
-export default function useFriends() {
+export default function useFriends(displayName?: string) {
     const router = useRouter();
+    const sendNotification = useNotificationStore((s) => s.sendNotification);
     const [activeTab, setActiveTab] = useState<TabType>('ONLINE');
     const [friends, setFriends] = useState<User[]>([]);
     const [pendingRequests, setPendingRequests] = useState<User[]>([]);
@@ -55,6 +58,11 @@ export default function useFriends() {
             if (res.success) {
                 toast.success('Запрос в друзья успешно отправлен!');
                 setFriendEmailInput('');
+                sendNotification({
+                    channelId: `users:${target}`,
+                    message: `${displayName || 'Пользователь'} отправил заявку в друзья!`,
+                    type: NOTIFICATION_TYPE.FRIENDSHIP_REQUEST,
+                });
             } else {
                 throw new Error(res.error);
             }
@@ -83,6 +91,11 @@ export default function useFriends() {
             if (res.success) {
                 toast.success('Запрос принят!');
                 setPendingRequests((prev) => prev.filter((u) => u.id !== requesterId));
+                sendNotification({
+                    channelId: `users:${requesterId}`,
+                    message: `${displayName || 'Пользователь'} принял ваш запрос в друзья!`,
+                    type: NOTIFICATION_TYPE.FRIENDSHIP_ACCEPT,
+                });
             }
         } catch {
             toast.error('Ошибка принятия запроса');
@@ -122,5 +135,6 @@ export default function useFriends() {
         handleStartChat,
         handleAcceptRequest,
         handleDeclineOrRemove,
+        sendNotification,
     };
 }

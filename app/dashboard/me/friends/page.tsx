@@ -4,6 +4,7 @@ import { useLayoutEffect } from 'react';
 
 import { Input } from '@/components/ui/input';
 
+import { useAuthStore } from '@/features/auth/store/auth.store';
 import {
     FriendCard,
     FriendsActivities,
@@ -16,7 +17,7 @@ import { usePresenceStore } from '@/features/shared/store/presence.store';
 
 export default function FriendsPage() {
     const checkUsersPresence = usePresenceStore((state) => state.checkUsersPresence);
-
+    const profile = useAuthStore((s) => s.profile);
     const {
         activeTab,
         friendEmailInput,
@@ -31,7 +32,7 @@ export default function FriendsPage() {
         setActiveTab,
         setFriendEmailInput,
         setSearchQuery,
-    } = useFriends();
+    } = useFriends(profile?.displayName);
 
     useLayoutEffect(() => {
         if (!friends || friends.length === 0) return;

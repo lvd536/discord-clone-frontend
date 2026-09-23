@@ -7,6 +7,8 @@ import { Hash, Send, Users } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { useAuthStore } from '@/features/auth/store/auth.store';
+import { useNotificationStore } from '@/features/notifications/store/notification.store';
+import { NOTIFICATION_TYPE } from '@/features/notifications/types/notification.types';
 import { getServerMembers } from '@/features/server/actions';
 import { MembersSheet } from '@/features/server/components';
 import { ServerMembersType } from '@/features/shared/types/channel.types';
@@ -26,6 +28,7 @@ interface IProps {
 export default function ChatArea({ channelName, channelId, serverId }: IProps) {
     const { profile } = useAuthStore();
     const { sendTyping, typingNames } = useTypingIndicator(profile?.id, profile?.displayName);
+    const sendNotification = useNotificationStore((s) => s.sendNotification);
     const { chatMessages, send, isSending } = useChat();
     const [history, setHistory] = useState<INormalizedMessage[]>([]);
     const [members, setMembers] = useState<ServerMembersType>([]);
@@ -78,6 +81,12 @@ export default function ChatArea({ channelName, channelId, serverId }: IProps) {
         try {
             await send(content);
             await createMessage({ serverId, channelId, content });
+
+            sendNotification({
+                channelId: `servers:${serverId}`,
+                message: content,
+                type: NOTIFICATION_TYPE.NEW_MESSAGE_NOTIFICATION,
+            });
         } catch (err) {
             if (err instanceof Error) {
                 toast.error(`Ошибка при отправке сообщения: ${err.message}`);

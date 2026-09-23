@@ -14,6 +14,8 @@ import {
     sendDirectMessage,
 } from '@/features/direct-chat/actions';
 import { GroupActions } from '@/features/direct-chat/components';
+import { useNotificationStore } from '@/features/notifications/store/notification.store';
+import { NOTIFICATION_TYPE } from '@/features/notifications/types/notification.types';
 
 import { useTypingIndicator } from '../hooks/useTypingIndicator';
 import { INormalizedMessage } from '../types/message.types';
@@ -42,6 +44,7 @@ export default function DirectChatArea({
     isOwner,
 }: IProps) {
     const { sendTyping, typingNames } = useTypingIndicator(currentUserId, currentUsername);
+    const sendNotification = useNotificationStore((state) => state.sendNotification);
     const { chatMessages, send, isSending } = useChat();
     const participants = useParticipants();
 
@@ -92,6 +95,12 @@ export default function DirectChatArea({
         try {
             await send(content);
             await sendDirectMessage({ conversationId, content });
+
+            sendNotification({
+                channelId: `conversations:${conversationId}`,
+                message: content,
+                type: NOTIFICATION_TYPE.NEW_MESSAGE_NOTIFICATION,
+            });
         } catch (err) {
             if (err instanceof Error) {
                 toast.error(`Ошибка при отправке сообщения: ${err.message}`);

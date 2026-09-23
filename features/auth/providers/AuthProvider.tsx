@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { useAuthStore } from '@/features/auth/store/auth.store';
+import { useNotifications } from '@/features/notifications/hooks/useNotifications';
 import { usePresence } from '@/features/shared/hooks/usePresence';
 import { usePresenceStore } from '@/features/shared/store/presence.store';
 
@@ -18,6 +19,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     const [authToken, setAuthToken] = useState<string | null>(null);
 
     usePresence(authToken);
+
+    useNotifications(authToken);
 
     useEffect(() => {
         const initializeAuth = async () => {
