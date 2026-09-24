@@ -100,6 +100,11 @@ export default function DirectChatArea({
                 channelId: `conversations:${conversationId}`,
                 message: content,
                 type: NOTIFICATION_TYPE.NEW_MESSAGE_NOTIFICATION,
+                metadata: {
+                    conversationId,
+                    senderId: currentUserId,
+                    senderName: currentUsername || 'Пользователь',
+                },
             });
         } catch (err) {
             if (err instanceof Error) {

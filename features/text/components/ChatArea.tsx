@@ -86,6 +86,12 @@ export default function ChatArea({ channelName, channelId, serverId }: IProps) {
                 channelId: `servers:${serverId}`,
                 message: content,
                 type: NOTIFICATION_TYPE.NEW_MESSAGE_NOTIFICATION,
+                metadata: {
+                    serverId,
+                    channelName,
+                    senderId: profile?.id,
+                    senderName: profile?.displayName || 'Пользователь',
+                },
             });
         } catch (err) {
             if (err instanceof Error) {

@@ -20,4 +20,5 @@ export interface SendNotificationDto {
     channelId: string;
     message: string;
     type: NOTIFICATION_TYPE;
+    metadata?: object;
 }

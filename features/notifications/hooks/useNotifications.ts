@@ -22,6 +22,11 @@ export function useNotifications(accessToken?: string | null) {
     const pathname = usePathname();
     const router = useRouter();
 
+    const profileRef = useRef(profile);
+    useEffect(() => {
+        profileRef.current = profile;
+    }, [profile]);
+
     const pathnameRef = useRef(pathname);
     useEffect(() => {
         pathnameRef.current = pathname;
@@ -58,24 +63,40 @@ export function useNotifications(accessToken?: string | null) {
         });
 
         socket.on('notification', (data: NotificationPayload) => {
-            const sender = data.metadata?.senderName || 'Пользователь';
+            const myId = profileRef.current?.id;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const senderId = (data as any).metadata?.senderId;
+            if (myId && senderId && myId === senderId) {
+                return;
+            }
 
-            if (profile?.displayName === sender) return;
+            const sender = data.metadata?.senderName || 'Пользователь';
 
             switch (data.type) {
                 case NOTIFICATION_TYPE.NEW_MESSAGE_NOTIFICATION: {
-                    const { channelId, metadata } = data;
                     const currentPath = pathnameRef.current;
 
-                    const isCurrentlyInThisChannel = [
-                        channelId,
-                        metadata?.conversationId,
-                        metadata?.serverId,
-                    ].some((id) => id && currentPath.includes(id));
+                    const cleanTargetId = data.channelId.replace(
+                        /^(servers:|users:|channel:|conversations:)/,
+                        '',
+                    );
+                    const serverId = data.metadata?.serverId;
+                    const conversationId = data.metadata?.conversationId;
+
+                    let isCurrentlyInThisChannel = false;
+
+                    if (serverId) {
+                        isCurrentlyInThisChannel =
+                            currentPath.includes(serverId) && currentPath.includes(cleanTargetId);
+                    } else {
+                        const targetChatId = conversationId || cleanTargetId;
+                        isCurrentlyInThisChannel = Boolean(
+                            targetChatId && currentPath.includes(targetChatId),
+                        );
+                    }
 
                     if (!isCurrentlyInThisChannel) {
-                        const serverId = data.metadata?.serverId;
-                        addUnreadMessage(data.channelId, serverId);
+                        addUnreadMessage(cleanTargetId, serverId);
 
                         toast(`${sender}`, {
                             description: data.message,
@@ -84,10 +105,10 @@ export function useNotifications(accessToken?: string | null) {
                                 onClick: () => {
                                     if (serverId) {
                                         router.push(
-                                            `/dashboard/server/${serverId}/channels/${data.channelId}`,
+                                            `/dashboard/server/${serverId}/channels/${cleanTargetId}`,
                                         );
                                     } else {
-                                        router.push(`/dashboard/@me/${data.channelId}`);
+                                        router.push(`/dashboard/me/${cleanTargetId}`);
                                     }
                                 },
                             },
