@@ -4,14 +4,16 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { MessageSquare } from 'lucide-react';
+import { Check, Copy, MessageSquare, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import { getOrCreateDM } from '@/features/direct-chat/actions';
+import { sendFriendRequest } from '@/features/friends/actions';
 import { ServerMemberType } from '@/features/shared/types/channel.types';
+import { getErrorMessage } from '@/lib/errors';
 
 interface UserPopoverProps {
     member: ServerMemberType;
@@ -25,6 +27,8 @@ export function UserPopover({ member, nameStyle, isOnline }: UserPopoverProps) {
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [copied, setCopied] = useState(false);
+    const [requestSent, setRequestSent] = useState(false);
 
     const primaryRoleColor = member.roles?.[0]?.color;
     const bannerColor =
@@ -39,10 +43,33 @@ export function UserPopover({ member, nameStyle, isOnline }: UserPopoverProps) {
                 router.push(`/dashboard/@me/${res.data.id}`);
             }
         } catch (err) {
-            if (err instanceof Error) toast.error(err.message || 'Не удалось открыть диалог');
+            const message = getErrorMessage(err);
+            toast.error(message);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleAddFriend = async () => {
+        try {
+            const res = await sendFriendRequest(member.user.id);
+            if (res.success) {
+                setRequestSent(true);
+                toast.success('Запрос в друзья отправлен!');
+            } else {
+                toast.error(res.error || 'Не удалось отправить запрос');
+            }
+        } catch {
+            toast.error('Произошла ошибка при отправке запроса');
+        }
+    };
+
+    const handleCopyId = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(member.user.id);
+        setCopied(true);
+        toast.success(`ID пользователя ${member.user.displayName} скопирован!`);
+        setTimeout(() => setCopied(false), 2000);
     };
 
     const initials = member.user.displayName.substring(0, 2).toUpperCase();
@@ -116,26 +143,53 @@ export function UserPopover({ member, nameStyle, isOnline }: UserPopoverProps) {
                         />
                     </div>
 
-                    <button
-                        onClick={handleStartDirectChat}
-                        disabled={loading}
-                        className="mb-1 flex cursor-pointer items-center gap-1.5 rounded-md bg-[#2b2d31] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#35363c] disabled:opacity-50"
-                        title="Написать сообщение"
-                    >
-                        <MessageSquare className="h-3.5 w-3.5 text-[#b5bac1]" />
-                        <span>Чат</span>
-                    </button>
+                    <div className="mb-1 flex items-center gap-1.5">
+                        <button
+                            onClick={handleAddFriend}
+                            disabled={requestSent}
+                            className={`flex cursor-pointer items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                                requestSent
+                                    ? 'bg-[#23a55a]/20 text-[#23a55a]'
+                                    : 'bg-[#2b2d31] text-white hover:bg-[#35363c]'
+                            }`}
+                            title="Отправить запрос в друзья"
+                        >
+                            <UserPlus className="h-3.5 w-3.5" />
+                            <span>{requestSent ? 'Отправлено' : '+ Друг'}</span>
+                        </button>
+
+                        <button
+                            onClick={handleStartDirectChat}
+                            disabled={loading}
+                            className="flex cursor-pointer items-center gap-1 rounded-md bg-[#2b2d31] px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#35363c] disabled:opacity-50"
+                            title="Написать сообщение"
+                        >
+                            <MessageSquare className="h-3.5 w-3.5 text-[#b5bac1]" />
+                            <span>Чат</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div className="space-y-4 bg-[#111214] p-4 pt-6">
-                    <div className="space-y-3 rounded-xl border border-[#2b2d31]/50 bg-[#1e1f22] p-3">
+                    <div className="space-y-3 rounded-xl border border-[#2b2d31]/50 bg-[#1e1f22] p-3.5">
                         <div>
                             <h3 className="text-base leading-tight font-bold text-[#f2f3f5]">
                                 {member.user.displayName}
                             </h3>
-                            <span className="text-xs font-medium text-[#949ba4]">
-                                {member.user.email}
-                            </span>
+
+                            <button
+                                type="button"
+                                onClick={handleCopyId}
+                                className="group/copy mt-1.5 flex cursor-pointer items-center gap-1.5 rounded bg-[#111214] px-2 py-1 font-mono text-[11px] text-[#949ba4] transition-colors hover:bg-[#2b2d31] hover:text-[#dbdee1]"
+                                title="Нажмите, чтобы скопировать ID участника"
+                            >
+                                <span className="max-w-47.5 truncate">ID: {member.user.id}</span>
+                                {copied ? (
+                                    <Check className="h-3 w-3 shrink-0 text-[#23a55a]" />
+                                ) : (
+                                    <Copy className="h-3 w-3 shrink-0 opacity-60 group-hover/copy:opacity-100" />
+                                )}
+                            </button>
                         </div>
 
                         <div className="h-px w-full bg-[#2b2d31]" />

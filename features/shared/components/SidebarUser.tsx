@@ -1,9 +1,15 @@
+'use client';
+
+import { useState } from 'react';
+
 import Link from 'next/link';
 
 import { User } from '@backend/types/__generated__/client';
-import { Settings } from 'lucide-react';
+import { Check, Copy, Settings } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import { ROUTES } from '@/features/shared/constants/route.constants';
 
@@ -12,34 +18,114 @@ interface IProps {
 }
 
 export default function SidebarUser({ user }: IProps) {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopyId = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(user.id);
+        setCopied(true);
+        toast.success('Ваш ID скопирован в буфер обмена!');
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    const initials = (user.displayName ?? user.email).slice(0, 2).toUpperCase();
+
     return (
-        <div className="flex h-13 w-full items-center justify-between bg-[#232428] px-2 py-1.5">
-            <div className="flex max-w-30 cursor-pointer items-center gap-2 rounded p-1">
-                {user.avatarUrl && (
-                    <Avatar>
-                        <AvatarImage src={user.avatarUrl} />
-                        <AvatarFallback>
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#5865f2] text-xs font-bold text-white">
-                                {(user.displayName ?? user.email).slice(0, 2)}
-                            </div>
-                        </AvatarFallback>
-                    </Avatar>
-                )}
-                <div className="flex flex-col overflow-hidden">
-                    <span className="truncate text-xs font-bold text-[#f2f3f5]">
-                        {user.displayName ?? user.email.slice(0, 5)}
-                    </span>
+        <Popover>
+            <PopoverTrigger
+                nativeButton={false}
+                render={
+                    <div className="group flex h-13 cursor-pointer items-center gap-2 bg-[#232428] p-1 transition-colors hover:bg-[#35363c]/50">
+                        <div className="relative shrink-0">
+                            <Avatar className="h-8 w-8">
+                                <AvatarImage src={user.avatarUrl ?? ''} className="object-cover" />
+                                <AvatarFallback className="bg-[#5865f2] text-xs font-bold text-white uppercase">
+                                    {initials}
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="absolute -right-0.5 -bottom-0.5 h-3 w-3 rounded-full border-2 border-[#232428] bg-[#23a55a]" />
+                        </div>
+
+                        <div className="flex flex-col overflow-hidden">
+                            <span className="truncate text-xs font-bold text-[#f2f3f5] group-hover:text-white">
+                                {user.displayName ?? user.email.slice(0, 5)}
+                            </span>
+                            <span className="text-[10px] text-[#949ba4]">В сети</span>
+                        </div>
+                    </div>
+                }
+            />
+
+            <PopoverContent
+                side="top"
+                align="start"
+                sideOffset={14}
+                className="z-50 w-80 overflow-hidden rounded-2xl border border-[#1f2023]/80 bg-[#111214] p-0 text-[#dbdee1] shadow-2xl select-none"
+            >
+                <div className="h-16 w-full bg-[#5865f2]" />
+
+                <div className="relative bottom-8 flex h-8 items-end justify-between px-4">
+                    <div className="relative">
+                        <Avatar className="h-20 w-20 rounded-full border-[6px] border-[#111214] bg-[#1e1f22] object-cover">
+                            <AvatarImage src={user.avatarUrl ?? ''} className="object-cover" />
+                            <AvatarFallback className="bg-[#5865f2] text-xl font-bold text-white uppercase">
+                                {initials}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div className="absolute right-0.5 bottom-1 h-5 w-5 rounded-full border-[3.5px] border-[#111214] bg-[#23a55a]" />
+                    </div>
+
+                    <Link
+                        href={ROUTES.PROFILE}
+                        className="mb-1 flex items-center gap-1.5 rounded-md bg-[#2b2d31] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#35363c]"
+                    >
+                        <Settings className="h-3.5 w-3.5 text-[#b5bac1]" />
+                        <span>Профиль</span>
+                    </Link>
                 </div>
-            </div>
-            <div className="flex gap-0.5">
-                <div id="voice-controls-target"></div>
-                <Link
-                    href={ROUTES.PROFILE}
-                    className="group rounded p-1 transition-colors hover:bg-[#35373c]"
-                >
-                    <Settings className="h-5 w-5 text-[#b5bac1] transition-colors group-hover:text-[#f2f3f5]" />
-                </Link>
-            </div>
-        </div>
+
+                <div className="space-y-4 bg-[#111214] p-4 pt-6">
+                    <div className="space-y-3 rounded-xl border border-[#2b2d31]/50 bg-[#1e1f22] p-3.5">
+                        <div>
+                            <h3 className="text-base leading-tight font-bold text-[#f2f3f5]">
+                                {user.displayName}
+                            </h3>
+                            <span className="mt-0.5 block text-xs font-medium text-[#949ba4]">
+                                {user.email}
+                            </span>
+                        </div>
+
+                        <div className="h-px w-full bg-[#2b2d31]" />
+
+                        <div>
+                            <span className="mb-1.5 block text-[10px] font-bold tracking-wider text-[#949ba4] uppercase">
+                                Ваш User ID (для добавления в друзья)
+                            </span>
+
+                            <button
+                                type="button"
+                                onClick={handleCopyId}
+                                className="group/btn flex w-full cursor-pointer items-center justify-between rounded-lg border border-[#2b2d31] bg-[#111214] px-3 py-2 text-left font-mono text-xs text-[#dbdee1] transition-all hover:border-[#5865f2] hover:bg-[#18191c]"
+                                title="Нажмите, чтобы скопировать ID"
+                            >
+                                <span className="truncate pr-2 font-mono text-[11px] text-[#00a8fc] select-all">
+                                    {user.id}
+                                </span>
+                                <div className="flex shrink-0 items-center gap-1 text-[#949ba4] group-hover/btn:text-white">
+                                    {copied ? (
+                                        <Check className="h-3.5 w-3.5 text-[#23a55a]" />
+                                    ) : (
+                                        <Copy className="h-3.5 w-3.5" />
+                                    )}
+                                    <span className="font-sans text-[10px] font-medium">
+                                        {copied ? 'Скопировано!' : 'Копировать'}
+                                    </span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </PopoverContent>
+        </Popover>
     );
 }
