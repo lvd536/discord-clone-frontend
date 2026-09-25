@@ -1,4 +1,3 @@
-export { default as FriendsActivities } from './FriendsActivities';
 export { default as FriendsAddTab } from './FriendsAddTab';
 export { default as FriendsTabs } from './FriendsTabs';
 export { default as FriendCard } from './FriendCard';
