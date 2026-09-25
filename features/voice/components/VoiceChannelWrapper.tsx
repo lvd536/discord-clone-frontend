@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { joinChannel } from '@/features/shared/actions';
 import { useVoiceStore } from '@/features/shared/store/voice.store';
 import { VoiceChannel } from '@/features/voice/components';
+import { getErrorMessage } from '@/lib/errors';
 
 interface VoiceChannelWrapperProps {
     serverId: string;
@@ -34,9 +35,9 @@ export default function VoiceChannelWrapper({
 
                 connect({ channelId, channelName, token: data.token, serverId });
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-            setError(err.response?.data?.message || err.message);
+        } catch (err) {
+            const message = getErrorMessage(err);
+            setError(message);
         } finally {
             setLoading(false);
         }

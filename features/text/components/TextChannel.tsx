@@ -6,6 +6,7 @@ import { LiveKitRoom } from '@livekit/components-react';
 
 import { joinChannel } from '@/features/shared/actions';
 import { serverUrl } from '@/features/shared/constants/livekit.constants';
+import { getErrorMessage } from '@/lib/errors';
 
 import ChatArea from './ChatArea';
 
@@ -31,9 +32,9 @@ export default function TextChannel({ channelName, serverId, channelId }: IProps
                     const data = joinResponse.data;
                     setToken(data.token);
                 }
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (err: any) {
-                setError(err.response?.data?.message || err.message);
+            } catch (err) {
+                const message = getErrorMessage(err);
+                setError(message);
             } finally {
                 setLoading(false);
             }

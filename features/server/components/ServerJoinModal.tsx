@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input';
 import { ROUTES } from '@/features/shared/constants/route.constants';
 
 import { joinServer } from '../actions';
+import { getErrorMessage } from '@/lib/errors';
 
 export default function ServerJoinModal() {
     const router = useRouter();
@@ -49,10 +50,8 @@ export default function ServerJoinModal() {
             router.refresh();
 
             router.push(ROUTES.DASHBOARD.SERVER.ID(member.serverId));
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-            const message =
-                err.response?.data?.message || err.message || 'Не удалось присоединиться к серверу';
+        } catch (err) {
+            const message = getErrorMessage(err)
             toast.error(message);
         } finally {
             setLoading(false);
