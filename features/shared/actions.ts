@@ -1,5 +1,7 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+
 import { Channel, ChannelType } from '@backend/types/__generated__/client';
 
 import { api } from '@/lib/api/api';
@@ -30,6 +32,14 @@ export const joinChannel = createSafeAction(
             channelId,
         });
 
+        return response.data;
+    },
+);
+
+export const deleteChannel = createSafeAction(
+    async ({ serverId, channelId }: { serverId: string; channelId: string }) => {
+        const response = await api.delete(`/servers/${serverId}/channels/${channelId}`);
+        revalidatePath(`/dashboard/server/${serverId}`);
         return response.data;
     },
 );
