@@ -127,7 +127,7 @@ export function LoginForm() {
                 </button>
 
                 <div className="pt-2 text-xs text-[#949ba4]">
-                    Нужна учетная запись?{' '}
+                    Нужна учетная запись?
                     <Link
                         href="/auth/register"
                         className="font-medium text-[#00a8fc] hover:underline"

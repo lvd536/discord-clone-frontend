@@ -66,7 +66,7 @@ export default function ServerLeaveAlert({
                         Покинуть &apos;{serverName}&apos;
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-sm text-[#949ba4]">
-                        Вы уверены, что хотите покинуть сервер{' '}
+                        Вы уверены, что хотите покинуть сервер
                         <span className="font-semibold text-white">{serverName}</span>? Вы не
                         сможете вернуться обратно, пока не получите новое приглашение.
                     </AlertDialogDescription>

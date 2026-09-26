@@ -107,7 +107,7 @@ export default function MemberEditModal({ member, roles }: IProps) {
                         Управление пользователем
                     </DialogTitle>
                     <p className="mt-1 text-sm text-[#b5bac1]">
-                        Изменение ролей для{' '}
+                        Изменение ролей для
                         <span className="font-semibold text-white">{member.user.displayName}</span>
                     </p>
                 </DialogHeader>
