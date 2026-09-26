@@ -86,9 +86,10 @@ export const editGroup = createSafeAction(
         const response = await api.patch(`/conversations/${conversationId}/group`, {
             name,
             participantIds,
+            friendIds: participantIds,
         });
         revalidatePath('/dashboard/me');
-        return response.data as DirectMessage;
+        return response.data;
     },
 );
 
