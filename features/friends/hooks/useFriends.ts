@@ -11,7 +11,7 @@ import { NOTIFICATION_TYPE } from '@/features/notifications/types/notification.t
 import { ROUTES } from '@/features/shared/constants/route.constants';
 
 import { acceptFriendRequest, getFriends, removeFriend, sendFriendRequest } from '../actions';
-import { TabType } from '../types';
+import { TabType } from '../types/tab.types';
 
 export default function useFriends(displayName?: string) {
     const router = useRouter();

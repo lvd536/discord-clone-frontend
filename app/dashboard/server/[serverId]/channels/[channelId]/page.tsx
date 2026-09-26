@@ -1,6 +1,6 @@
 import { getChannelInfo } from '@/features/shared/actions';
-import { TextChannel } from '@/features/text/components';
-import {VoiceChannelWrapper} from '@/features/voice/components';
+import TextChannel from "@/features/text/components/TextChannel";
+import VoiceChannelWrapper from "@/features/voice/components/VoiceChannelWrapper";
 
 interface ChannelPageProps {
     params: Promise<{

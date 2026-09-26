@@ -4,15 +4,12 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { X } from 'lucide-react';
-
-import {
-    ServerSettingsSheet,
-    SettingsMembersTab,
-    SettingsRolesTab,
-    SettingsServerTab,
-} from '@/features/server-settings/components';
 import { getServerInfo } from '@/features/server/actions';
 import { ROUTES } from '@/features/shared/constants/route.constants';
+import ServerSettingsSheet from "@/features/server-settings/components/ServerSettingsSheet";
+import SettingsMembersTab from "@/features/server-settings/components/SettingsMembersTab";
+import SettingsRolesTab from "@/features/server-settings/components/SettingsRolesTab";
+import SettingsServerTab from "@/features/server-settings/components/SettingsServerTab";
 
 interface IProps {
     params: Promise<{ serverId: string }>;

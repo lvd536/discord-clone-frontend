@@ -1,10 +1,10 @@
 import { User } from '@backend/types/__generated__/client';
-
-import { ServerActions } from '@/features/server/components';
-import { CreateChannelModal, SidebarUser } from '@/features/shared/components';
 import { ServerInfoResponse } from '@/features/shared/types/channel.types';
 
 import ServerChannelList from './ServerChannelList';
+import ServerActions from "@/features/server/components/ServerActions";
+import CreateChannelModal from "@/features/shared/components/CreateChannelModal";
+import SidebarUser from "@/features/shared/components/SidebarUser";
 
 interface ServerSidebarProps {
     serverInfo: ServerInfoResponse;

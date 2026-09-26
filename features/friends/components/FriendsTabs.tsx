@@ -1,6 +1,5 @@
 import { Users } from 'lucide-react';
-
-import { TabType } from '../types';
+import { TabType } from "../types/tab.types";
 
 interface IProps {
     activeTab: TabType;

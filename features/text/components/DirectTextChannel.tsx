@@ -5,9 +5,8 @@ import { LiveKitRoom, RoomAudioRenderer } from '@livekit/components-react';
 
 import { serverUrl } from '@/features/shared/constants/livekit.constants';
 import { useVoiceStore } from '@/features/shared/store/voice.store';
-import { VoiceChannelInterface } from '@/features/voice/components';
-
 import DirectChatArea from './DirectChatArea';
+import VoiceChannelInterface from "@/features/voice/components/VoiceChannelInterface";
 
 interface IProps {
     channelId: string;

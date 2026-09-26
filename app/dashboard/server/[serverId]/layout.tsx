@@ -1,7 +1,7 @@
 import { getProfile } from '@/features/auth/actions';
 import { getServerInfo, getUserServers } from '@/features/server/actions';
 import ServerSidebar from '@/features/server/components/ServerSidebar';
-import { MobileSidebar } from '@/features/shared/components';
+import MobileSidebar from "@/features/shared/components/MobileSidebar";
 
 interface IProps {
     params: Promise<{ serverId: string }>;

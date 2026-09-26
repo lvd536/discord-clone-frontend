@@ -2,8 +2,7 @@
 
 import { ConversationType } from '@backend/types/__generated__/enums';
 import { Phone } from 'lucide-react';
-
-import { GroupActions } from '@/features/direct-chat/components';
+import GroupActions from "@/features/direct-chat/components/GroupActions";
 
 interface DirectChatHeaderProps {
     channelName: string;

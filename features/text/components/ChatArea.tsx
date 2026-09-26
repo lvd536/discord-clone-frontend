@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 
 import { useAuthStore } from '@/features/auth/store/auth.store';
 import { getServerMembers } from '@/features/server/actions';
-import { MembersSheet } from '@/features/server/components';
 import { ServerMembersType } from '@/features/shared/types/channel.types';
 
 import { useServerChatMessages } from '../hooks/useServerChatMessages';
@@ -15,6 +14,7 @@ import ChatAreaHeader from './ChatAreaHeader';
 import ChatAreaMessage from './ChatAreaMessage';
 import ChatInputForm from './ChatInputForm';
 import TypingIndicator from './TypingIndicator';
+import MembersSheet from "@/features/server/components/MembersSheet";
 
 interface IProps {
     serverId: string;

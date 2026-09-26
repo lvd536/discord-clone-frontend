@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { getProfile } from '@/features/auth/actions';
 import { getUserConversations } from '@/features/direct-chat/actions';
 import { joinChannel } from '@/features/shared/actions';
-import { DirectTextChannel } from '@/features/text/components';
+import DirectTextChannel from "@/features/text/components/DirectTextChannel";
 
 interface IProps {
     params: Promise<{ chatId: string }>;

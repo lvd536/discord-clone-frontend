@@ -3,10 +3,11 @@
 import Link from 'next/link';
 
 import { Server } from '@backend/types/__generated__/client';
-
-import { ServerCreationModal, ServerJoinModal, SidebarServer } from '@/features/server/components';
 import { ROUTES } from '@/features/shared/constants/route.constants';
 import { ServerInfoResponse } from '@/features/shared/types/channel.types';
+import ServerCreationModal from "@/features/server/components/ServerCreationModal";
+import ServerJoinModal from "@/features/server/components/ServerJoinModal";
+import SidebarServer from "@/features/server/components/SidebarServer";
 
 interface MobileSidebarServerNavProps {
     userServers: Server[];

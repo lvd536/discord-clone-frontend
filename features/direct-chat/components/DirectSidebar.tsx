@@ -1,11 +1,10 @@
 import { User } from '@backend/types/__generated__/client';
 import { Search } from 'lucide-react';
-
-import { CreateGroupModal } from '@/features/direct-chat/components';
 import ConversationsList from '@/features/direct-chat/components/ConversationList';
 import FriendsTabButton from '@/features/direct-chat/components/FriendsTabButton';
 import { UserConversationsType } from '@/features/direct-chat/types/direct-chat.types';
-import { SidebarUser } from '@/features/shared/components';
+import CreateGroupModal from "@/features/direct-chat/components/CreateGroupModal";
+import SidebarUser from "@/features/shared/components/SidebarUser";
 
 interface DirectSidebarProps {
     user: User;

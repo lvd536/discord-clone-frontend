@@ -2,11 +2,9 @@
 
 import { ConversationType } from '@backend/types/__generated__/enums';
 import { Radio, User, Users, Volume2 } from 'lucide-react';
-
-import { GroupActions } from '@/features/direct-chat/components';
-
 import VoiceControlsBar from './VoiceControlsBar';
 import VoiceGrid from './VoiceGrid';
+import GroupActions from "@/features/direct-chat/components/GroupActions";
 
 interface IProps {
     channelId: string;

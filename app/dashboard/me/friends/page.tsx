@@ -5,13 +5,11 @@ import { useLayoutEffect } from 'react';
 import { Input } from '@/components/ui/input';
 
 import { useAuthStore } from '@/features/auth/store/auth.store';
-import {
-    FriendCard,
-    FriendsAddTab,
-    FriendsTabs,
-    PendingRequest,
-} from '@/features/friends/components';
-import useFriends from '@/features/friends/hooks';
+import FriendCard from '@/features/friends/components/FriendCard';
+import FriendsAddTab from '@/features/friends/components/FriendsAddTab';
+import FriendsTabs from '@/features/friends/components/FriendsTabs';
+import PendingRequest from '@/features/friends/components/PendingRequest';
+import useFriends from '@/features/friends/hooks/useFriends';
 import { usePresenceStore } from '@/features/shared/store/presence.store';
 
 export default function FriendsPage() {

@@ -4,8 +4,8 @@ import { getProfile } from '@/features/auth/actions';
 import { getUserConversations } from '@/features/direct-chat/actions';
 import DirectSidebar from '@/features/direct-chat/components/DirectSidebar';
 import { getUserServers } from '@/features/server/actions';
-import { MobileSidebar } from '@/features/shared/components';
 import { ROUTES } from '@/features/shared/constants/route.constants';
+import MobileSidebar from "@/features/shared/components/MobileSidebar";
 
 interface IProps {
     children: React.ReactNode;

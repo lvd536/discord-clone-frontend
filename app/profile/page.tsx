@@ -7,8 +7,10 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 import { useAuthStore } from '@/features/auth/store/auth.store';
-import { ProfileCredits, ProfileHeader, ProfileIntegrations } from '@/features/profile/components';
 import { ROUTES } from '@/features/shared/constants/route.constants';
+import ProfileCredits from "@/features/profile/components/ProfileCredits";
+import ProfileHeader from "@/features/profile/components/ProfileHeader";
+import ProfileIntegrations from "@/features/profile/components/ProfileIntegrations";
 
 export default function ProfilePage() {
     const { profile, refetchUser } = useAuthStore();
