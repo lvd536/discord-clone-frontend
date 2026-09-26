@@ -3,13 +3,10 @@
 import { useState } from 'react';
 
 import { Role } from '@backend/types/__generated__/client';
-import { RolePermissions } from '@backend/types/__generated__/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Pencil } from 'lucide-react';
-import { HexColorPicker } from 'react-colorful';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -21,20 +18,11 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { MultiSelect } from '@/components/ui/multi-select';
+
+import { getErrorMessage } from '@/lib/errors';
 
 import { updateServerRole } from '../actions';
-import { PRESET_COLORS } from '../constants/role.constants';
-
-const editRoleFormSchema = z.object({
-    name: z.string().min(2, 'Минимум 2 символа'),
-    color: z.string().regex(/^#[0-9A-F]{6}$/i, 'Неверный формат цвета'),
-    permissions: z.array(z.enum(RolePermissions)),
-});
-
-type EditRoleFormValues = z.infer<typeof editRoleFormSchema>;
+import RoleFormFields, { RoleFormValues, roleFormSchema } from './RoleFormFields';
 
 interface IProps {
     role: Role;
@@ -43,8 +31,8 @@ interface IProps {
 export default function RoleEditModal({ role }: IProps) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const form = useForm<EditRoleFormValues>({
-        resolver: zodResolver(editRoleFormSchema),
+    const form = useForm<RoleFormValues>({
+        resolver: zodResolver(roleFormSchema),
         defaultValues: {
             name: role.name,
             color: role.color || '#99aab5',
@@ -52,24 +40,20 @@ export default function RoleEditModal({ role }: IProps) {
         },
     });
 
-    const onSubmit = async (values: EditRoleFormValues) => {
+    const onSubmit = async (values: RoleFormValues) => {
         try {
-            const response = await updateServerRole({
+            const res = await updateServerRole({
                 serverId: role.serverId,
                 role: values,
                 roleId: role.id,
             });
-
-            if (response.success) {
+            if (res.success) {
                 toast.success('Роль успешно обновлена');
                 setIsOpen(false);
-            } else throw new Error(response.error);
+            } else throw new Error(res.error);
         } catch (err) {
-            if (err instanceof Error) {
-                toast.error('Ошибка при изменении роли', {
-                    description: err.message,
-                });
-            } else toast.error('Не удалось обновить роль');
+            const message = getErrorMessage(err);
+            toast.error(message);
         }
     };
 
@@ -77,111 +61,21 @@ export default function RoleEditModal({ role }: IProps) {
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger
                 render={
-                    <button className="z-999 flex h-8 w-8 items-center justify-center rounded text-[#b5bac1] transition-colors hover:bg-[#35373c] hover:text-[#dbdee1]">
+                    <button className="flex h-8 w-8 cursor-pointer items-center justify-center rounded text-[#b5bac1] transition-colors hover:bg-[#35363c] hover:text-[#dbdee1]">
                         <Pencil size={18} />
                     </button>
                 }
             />
 
-            <DialogContent className="z-9999 max-w-lg overflow-hidden rounded-md border-none bg-[#313338] p-0 text-[#dbdee1] outline-none">
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    id="role-edit-form"
-                    className="z-9999 space-y-5 p-4"
-                >
+            <DialogContent className="z-9999 max-w-lg rounded-md border-none bg-[#313338] p-0 text-[#dbdee1] outline-none">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 p-4">
                     <DialogHeader className="p-4 pb-2">
                         <DialogTitle className="text-xl font-bold text-white">
                             Редактирование роли
                         </DialogTitle>
                     </DialogHeader>
 
-                    <Field>
-                        <FieldLabel htmlFor="name">Название роли</FieldLabel>
-                        <Input
-                            id="name"
-                            {...form.register('name')}
-                            className="border-none bg-[#1e1f22] text-white focus-visible:ring-1 focus-visible:ring-[#5865f2]"
-                        />
-                    </Field>
-
-                    <Controller
-                        name="color"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel htmlFor="color">Цвет роли</FieldLabel>
-
-                                <div className="rounded-md bg-[#2b2d31] p-2.5 sm:p-3">
-                                    <div className="flex flex-row items-center gap-3 sm:grid sm:grid-cols-2 sm:items-start sm:gap-4">
-                                        <div className="custom-color-picker shrink-0">
-                                            <HexColorPicker
-                                                color={field.value}
-                                                onChange={field.onChange}
-                                            />
-                                        </div>
-
-                                        <div className="flex h-full min-w-0 flex-1 flex-col justify-between py-0.5 sm:gap-3">
-                                            <div>
-                                                <span className="mb-1 block text-[11px] text-[#b5bac1] sm:text-xs">
-                                                    HEX-код
-                                                </span>
-                                                <div className="flex items-center gap-1.5 sm:gap-2">
-                                                    <div
-                                                        className="h-7 w-7 shrink-0 rounded border border-[#1e1f22] sm:h-8 sm:w-8"
-                                                        style={{ backgroundColor: field.value }}
-                                                    />
-                                                    <Input
-                                                        maxLength={7}
-                                                        onChange={(e) =>
-                                                            field.onChange(e.target.value)
-                                                        }
-                                                        value={field.value}
-                                                        className="h-7 w-full border-none bg-[#1e1f22] px-2 text-[11px] text-white uppercase sm:h-8 sm:text-xs"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="hidden sm:block">
-                                                <span className="mb-1.5 block text-xs text-[#b5bac1]">
-                                                    Популярные цвета
-                                                </span>
-                                                <div className="grid grid-cols-5 gap-1.5">
-                                                    {PRESET_COLORS.map((color) => (
-                                                        <button
-                                                            key={color}
-                                                            type="button"
-                                                            onClick={() => field.onChange(color)}
-                                                            className="h-6 w-6 rounded-full transition-transform hover:scale-110 focus:outline-none active:scale-95"
-                                                            style={{ backgroundColor: color }}
-                                                            title={color}
-                                                        />
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                            </Field>
-                        )}
-                    />
-
-                    <Controller
-                        name="permissions"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <MultiSelect
-                                    onChange={field.onChange}
-                                    selected={field.value}
-                                    options={Object.values(RolePermissions).map((permission) => ({
-                                        label: permission,
-                                        value: permission,
-                                    }))}
-                                />
-                            </Field>
-                        )}
-                    />
+                    <RoleFormFields register={form.register} control={form.control} />
 
                     <DialogFooter className="flex flex-row! items-center justify-end gap-3 rounded-md bg-[#2b2d31] p-2">
                         <Button
@@ -193,7 +87,6 @@ export default function RoleEditModal({ role }: IProps) {
                         >
                             Сбросить
                         </Button>
-
                         <DialogClose
                             render={
                                 <Button
@@ -204,14 +97,12 @@ export default function RoleEditModal({ role }: IProps) {
                                 </Button>
                             }
                         />
-
                         <Button
                             type="submit"
-                            form="role-edit-form"
                             disabled={!form.formState.isDirty || form.formState.isSubmitting}
                             className="h-9 rounded bg-[#5865f2] px-5 text-sm font-medium text-white transition-colors hover:bg-[#4752c4] disabled:opacity-50"
                         >
-                            Сохранить
+                            {form.formState.isSubmitting ? 'Сохранение...' : 'Сохранить'}
                         </Button>
                     </DialogFooter>
                 </form>
