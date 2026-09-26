@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
@@ -12,7 +12,8 @@ import { useAuthStore } from '@/features/auth/store/auth.store';
 
 import { register } from '../actions';
 import { useAuthCookie } from '../hooks/useAuthCookie';
-import OAuthProviders from './OAuthProviders';
+import AuthCard from './AuthCard';
+import AuthInputField from './AuthInputField';
 
 const registerFormSchema = z.object({
     displayName: z.string().min(4, 'Имя должно быть не менее 4 символов'),
@@ -20,26 +21,25 @@ const registerFormSchema = z.object({
     password: z.string().min(6, 'Пароль должен быть не менее 6 символов'),
 });
 
+type RegisterFormValues = z.infer<typeof registerFormSchema>;
+
 export function RegisterForm() {
     const router = useRouter();
     const { setAuthToken } = useAuthCookie();
     const initUser = useAuthStore((state) => state.initUser);
 
-    const form = useForm<z.infer<typeof registerFormSchema>>({
+    const {
+        register: formRegister,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<RegisterFormValues>({
         resolver: zodResolver(registerFormSchema),
-        defaultValues: {
-            displayName: '',
-            email: '',
-            password: '',
-        },
+        defaultValues: { displayName: '', email: '', password: '' },
     });
 
-    const isSubmitting = form.formState.isSubmitting;
-
-    async function onSubmit(data: z.infer<typeof registerFormSchema>) {
+    async function onSubmit(data: RegisterFormValues) {
         try {
             const { user, access_token } = await register(data);
-
             setAuthToken(access_token);
             await initUser(user);
 
@@ -51,105 +51,36 @@ export function RegisterForm() {
     }
 
     return (
-        <div className="mt-10 w-full max-w-120 rounded-lg border border-[#1f2023]/60 bg-[#313338] p-8 text-white shadow-2xl">
-            <div className="mb-6 space-y-1 text-center">
-                <h2 className="text-2xl font-bold tracking-tight text-white">
-                    Создать учетную запись
-                </h2>
-            </div>
+        <AuthCard title="Создать учетную запись">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <AuthInputField
+                    label="Отображаемое имя"
+                    required
+                    placeholder="Как к вам обращаться?"
+                    autoComplete="nickname"
+                    error={errors.displayName?.message}
+                    {...formRegister('displayName')}
+                />
 
-            <OAuthProviders />
+                <AuthInputField
+                    label="Адрес электронной почты"
+                    type="email"
+                    required
+                    placeholder="example@mail.ru"
+                    autoComplete="email"
+                    error={errors.email?.message}
+                    {...formRegister('email')}
+                />
 
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold tracking-wider text-[#b5bac1] uppercase">
-                        Отображаемое имя <span className="text-[#f23f43]">*</span>
-                    </label>
-                    <Controller
-                        name="displayName"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <>
-                                <input
-                                    {...field}
-                                    type="text"
-                                    placeholder="Как к вам обращаться?"
-                                    autoComplete="nickname"
-                                    className={`h-10 w-full rounded border bg-[#1e1f22] px-3 text-sm text-[#dbdee1] transition-colors focus:outline-none ${
-                                        fieldState.invalid
-                                            ? 'border-[#f23f43]'
-                                            : 'border-black/30 focus:border-[#5865f2]'
-                                    }`}
-                                />
-                                {fieldState.error && (
-                                    <span className="mt-1 block text-xs text-[#f23f43]">
-                                        {fieldState.error.message}
-                                    </span>
-                                )}
-                            </>
-                        )}
-                    />
-                </div>
-
-                <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold tracking-wider text-[#b5bac1] uppercase">
-                        Адрес электронной почты <span className="text-[#f23f43]">*</span>
-                    </label>
-                    <Controller
-                        name="email"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <>
-                                <input
-                                    {...field}
-                                    type="email"
-                                    placeholder="example@mail.ru"
-                                    autoComplete="email"
-                                    className={`h-10 w-full rounded border bg-[#1e1f22] px-3 text-sm text-[#dbdee1] transition-colors focus:outline-none ${
-                                        fieldState.invalid
-                                            ? 'border-[#f23f43]'
-                                            : 'border-black/30 focus:border-[#5865f2]'
-                                    }`}
-                                />
-                                {fieldState.error && (
-                                    <span className="mt-1 block text-xs text-[#f23f43]">
-                                        {fieldState.error.message}
-                                    </span>
-                                )}
-                            </>
-                        )}
-                    />
-                </div>
-
-                <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold tracking-wider text-[#b5bac1] uppercase">
-                        Пароль <span className="text-[#f23f43]">*</span>
-                    </label>
-                    <Controller
-                        name="password"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <>
-                                <input
-                                    {...field}
-                                    type="password"
-                                    placeholder="••••••••"
-                                    autoComplete="new-password"
-                                    className={`h-10 w-full rounded border bg-[#1e1f22] px-3 text-sm text-[#dbdee1] transition-colors focus:outline-none ${
-                                        fieldState.invalid
-                                            ? 'border-[#f23f43]'
-                                            : 'border-black/30 focus:border-[#5865f2]'
-                                    }`}
-                                />
-                                {fieldState.error && (
-                                    <span className="mt-1 block text-xs text-[#f23f43]">
-                                        {fieldState.error.message}
-                                    </span>
-                                )}
-                            </>
-                        )}
-                    />
-                </div>
+                <AuthInputField
+                    label="Пароль"
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    autoComplete="new-password"
+                    error={errors.password?.message}
+                    {...formRegister('password')}
+                />
 
                 <button
                     type="submit"
@@ -160,12 +91,12 @@ export function RegisterForm() {
                 </button>
 
                 <div className="pt-2 text-xs text-[#949ba4]">
-                    Уже есть учетная запись?
+                    Уже есть учетная запись?{' '}
                     <Link href="/auth/login" className="font-medium text-[#00a8fc] hover:underline">
                         Войти
                     </Link>
                 </div>
             </form>
-        </div>
+        </AuthCard>
     );
 }
